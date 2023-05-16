@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "marketspace",
+    "slug": "marketspace",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
