@@ -20,7 +20,7 @@ export const THEME = extendTheme({
 		}
 	},
 	fonts: {
-		regular: 'Karla_400Regular',
+		heading: 'Karla_400Regular',
 		bold: 'Karla_700Bold'
 	},
 	fontSizes: {
