@@ -1,9 +1,13 @@
 import React from 'react';
-import { Input as InputNativeBase, IInputProps } from 'native-base';
+import { Input as InputNativeBase, IInputProps, useTheme } from 'native-base';
+import { Eye } from 'phosphor-react-native';
 
-interface Props extends IInputProps{}
+interface Props extends IInputProps{
+	hasPassword?: boolean;
+}
 
-export function Input({...rest}: Props){
+export function Input({hasPassword = false,...rest}: Props){
+	const theme = useTheme();
 	return(
 		<InputNativeBase
 			px={4}
@@ -15,6 +19,10 @@ export function Input({...rest}: Props){
 			_focus={{
 				borderColor: 'gray.300'
 			}} 
+			InputRightElement={hasPassword ? 
+				<Eye size={20} style={{marginRight: 16}} color={theme.colors.gray[300]} />
+				: undefined
+			}
 			{...rest}
 		/>
 	)

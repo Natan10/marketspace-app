@@ -36,9 +36,7 @@ export function Login(){
 					<Input placeholder='E-mail' mb={4} />
 					<Input 
 						placeholder='Senha' 
-						InputRightElement={
-							<Eye size={20} style={{marginRight: 16}} color={theme.colors.gray[300]} />
-						}
+						hasPassword
 					/>
 
 					<Button w="full" p={3} mt={8} bgColor="blue.400" borderRadius={6}>
