@@ -1,8 +1,9 @@
 import React from 'react';
-import { HStack, VStack, Box, Image, Text, useTheme, Button, Pressable, } from 'native-base';
+import { HStack, VStack, Box, Image, Text, useTheme, Button, Pressable, FlatList, } from 'native-base';
 import { SafeAreaView } from 'react-native';
 import { ArrowRight, Plus, Tag } from 'phosphor-react-native';
 import { SearchInput } from '@components/SearchInput';
+import { AnnouncementCard } from '@components/AnnouncementCard';
 
 export function Home(){
 	const theme = useTheme();
@@ -85,6 +86,20 @@ export function Home(){
 						onFilters={() => console.log('filters')}
 					/>
 				</Box>
+
+				{/* announcement cards */}
+				<FlatList 
+					data={new Array(5).fill(10)}
+					showsVerticalScrollIndicator={false}
+					keyExtractor={item => String(item + Math.round(Math.random()*100))}
+					columnWrapperStyle={{justifyContent: 'space-between'}}
+					numColumns={2}
+					horizontal={false}
+					renderItem={() => (
+						<AnnouncementCard isNewProduct />
+					)}
+				/>
+
 			</VStack>
 		</SafeAreaView>
 	)
