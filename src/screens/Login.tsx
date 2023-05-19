@@ -1,6 +1,5 @@
 import React from 'react';
 import { VStack, Image, Text, Center, Heading, useTheme, Button } from 'native-base';
-import { Eye } from 'phosphor-react-native';
 
 import logo from '@assets/logo.png';
 import { Input } from '@components/Input';
