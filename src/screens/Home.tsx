@@ -97,6 +97,7 @@ export function Home(){
 					keyExtractor={item => String(item + Math.round(Math.random()*100))}
 					columnWrapperStyle={{justifyContent: 'space-between'}}
 					numColumns={2}
+					ItemSeparatorComponent={() => <Box mb={3}></Box>}
 					horizontal={false}
 					renderItem={() => (
 						<AnnouncementCard isNewProduct />
