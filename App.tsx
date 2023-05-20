@@ -4,9 +4,10 @@ import { NativeBaseProvider } from "native-base";
 import { Karla_400Regular, Karla_700Bold, useFonts} from '@expo-google-fonts/karla';
 
 import { THEME } from '@theme/.';
+import { DetailsAnnouncement } from '@screens/DetailsAnnouncement';
 
 // import { Register } from '@screens/Register';
-import { Home } from '@screens/Home';
+// import { Home } from '@screens/Home';
 
 export default function App() {
 	const [fontsLoaded] = useFonts({
@@ -20,7 +21,7 @@ export default function App() {
 
   return (
     <NativeBaseProvider theme={THEME}>
-      <Home/>
+      <DetailsAnnouncement/>
     </NativeBaseProvider>
   );
 }
