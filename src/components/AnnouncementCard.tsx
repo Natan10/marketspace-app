@@ -1,13 +1,13 @@
 import React from 'react';
 import { VStack, Box, Image, Text, Avatar } from 'native-base';
 
+import { AnnoucementDTO } from '@dtos/AnnoucementDTO';
+
 interface Props {
-	isNewProduct: boolean;
-	isEnabled?: boolean;
-	avatar?: string;
+	data: AnnoucementDTO;
 }
 
-export function AnnouncementCard({avatar,isNewProduct, isEnabled = true}: Props){
+export function AnnouncementCard({data: {isNewProduct, isEnabled, price, title, avatar}}: Props){
 	const iNewTag = (isNewProduct ? 'Novo':'Usado').toUpperCase();
 
 	return(
@@ -29,8 +29,9 @@ export function AnnouncementCard({avatar,isNewProduct, isEnabled = true}: Props)
 					bgColor={isNewProduct ? 'blue.500':'gray.200'} 
 					px={2} py={0.5} 
 					rounded={'full'}
+					opacity={isEnabled ? 100: 40}
 				>
-					<Text color={'#fff'} fontFamily={'body'} fontSize={10}  textTransform={{}}>
+					<Text color={'#fff'} fontFamily={'body'} fontSize={10}>
 						{iNewTag}
 					</Text>
 				</Box>
@@ -54,9 +55,22 @@ export function AnnouncementCard({avatar,isNewProduct, isEnabled = true}: Props)
 				)}
 			</Box>
 			<Box>
-				<Text color={'gray.200'} fontFamily={'heading'} fontSize={16}>Tenis vermelho</Text>
-				<Text color={'gray.100'} fontFamily={'body'} fontSize={18}>
-					<Text fontSize={12}>R$ </Text>13.40
+				<Text 
+					color={isEnabled ? 'gray.200' : 'gray.400'} 
+					fontFamily={'heading'} 
+					fontSize={16}
+				>
+					{title}
+				</Text>
+				<Text 
+					color={isEnabled ? 'gray.100' : 'gray.400'}
+					fontFamily={'body'}
+					fontSize={18}
+				>
+					<Text fontSize={12}>R$ </Text>{price.toLocaleString('pt-br', {
+						currency: 'brl',
+						style: 'currency'
+					})}
 				</Text>
 			</Box>
 		</VStack>
