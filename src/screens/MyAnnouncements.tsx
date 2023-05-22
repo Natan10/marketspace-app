@@ -5,7 +5,7 @@ import { CaretDown, Plus } from "phosphor-react-native";
 import { AnnouncementContainer } from "@components/AnnouncementContainer";
 import { annoucementsMock } from "../mocks/annoucements";
 
-export function MyAnnoucements(){
+export function MyAnnouncements(){
 	const theme = useTheme();
 
 	return(

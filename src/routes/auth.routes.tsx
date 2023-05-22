@@ -3,7 +3,7 @@ import { useTheme } from 'native-base';
 import { House, SignOut, Tag } from 'phosphor-react-native';
 
 import { Home } from '@screens/Home';
-import { MyAnnoucements } from '@screens/MyAnnoucements';
+import { MyAnnouncements } from '@screens/MyAnnouncements';
 
 type AuthRoutesParams = {
 	home: undefined;
@@ -43,7 +43,7 @@ export function AuthRoutes(){
 			/>
 			<Screen 
 				name='myAnnouncement'
-				component={MyAnnoucements}
+				component={MyAnnouncements}
 				options={{
 					tabBarIcon: ({color}) => {
 						return <Tag weight="bold" color={color} size={24} />
