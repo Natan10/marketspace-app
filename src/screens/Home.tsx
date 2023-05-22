@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { HStack, VStack, Box, Image, Text, useTheme, Button, Pressable, FlatList, Center, Heading, Switch, Checkbox, } from 'native-base';
+import { HStack, VStack, Box, Image, Text, useTheme, Button, Pressable, FlatList, Center, Heading, Switch, Checkbox, View, ScrollView, } from 'native-base';
 import { Modal, SafeAreaView } from 'react-native';
 import { ArrowRight, Plus, Tag, X } from 'phosphor-react-native';
 import { SearchInput } from '@components/SearchInput';
-import { AnnouncementCard } from '@components/AnnouncementCard';
 import { SelectButton } from '@components/SelectButton';
+import { AnnouncementContainer } from '@components/AnnouncementContainer';
+import { annoucementsMock } from '../mocks/annoucements';
 
 export function Home(){
 	const [isVisibleFilter, setIsVisibleFilter] = useState(false);
@@ -90,20 +91,11 @@ export function Home(){
 				</Box>
 
 				{/* announcement cards */}
-				<FlatList 
-					mt={6}
-					data={new Array(5).fill(10)}
-					showsVerticalScrollIndicator={false}
-					keyExtractor={item => String(item + Math.round(Math.random()*100))}
-					columnWrapperStyle={{justifyContent: 'space-between'}}
-					numColumns={2}
-					ItemSeparatorComponent={() => <Box mb={3}></Box>}
-					horizontal={false}
-					renderItem={() => (
-						<AnnouncementCard isNewProduct />
-					)}
-				/>
-
+				
+				<Box flex={1} my={6}>
+					<AnnouncementContainer data={annoucementsMock}/>
+				</Box>
+				
 				{/* TODO - melhorar isso, fazendo scroll com o react-gesture-handler */}
 				<Modal
 					visible={isVisibleFilter}
