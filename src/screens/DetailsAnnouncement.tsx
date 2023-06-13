@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, HStack, View, useTheme, Text, VStack, Badge, Box, Heading, ScrollView, Button} from 'native-base';
+import { Avatar, HStack, View, useTheme, Text, VStack, Badge, Heading, ScrollView, Button} from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { Pressable } from 'react-native';
 import { ArrowLeft, Barcode, CreditCard, Money, QrCode, WhatsappLogo } from 'phosphor-react-native';

@@ -5,7 +5,6 @@ import { Center, Heading, View, useTheme, Text, Select, HStack, VStack, Pressabl
 import { CaretDown, Plus } from "phosphor-react-native";
 
 import { AnnouncementContainer } from "@components/AnnouncementContainer";
-// import { MyDetailsNavigatorRouteProps } from "@routes/myDetails.routes";
 import { annoucementsMock } from "../mocks/annoucements";
 import { AuthNavigatorRouteProps } from "@routes/auth.routes";
 
