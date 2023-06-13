@@ -1,19 +1,29 @@
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native";
 import { Center, Heading, View, useTheme, Text, Select, HStack, VStack, Pressable } from "native-base";
 import { CaretDown, Plus } from "phosphor-react-native";
+
 import { AnnouncementContainer } from "@components/AnnouncementContainer";
+// import { MyDetailsNavigatorRouteProps } from "@routes/myDetails.routes";
 import { annoucementsMock } from "../mocks/annoucements";
+import { AuthNavigatorRouteProps } from "@routes/auth.routes";
 
 export function MyAnnouncements(){
 	const theme = useTheme();
+
+	const navigator = useNavigation<AuthNavigatorRouteProps>();
+
+	function handleNavigateToCreateNewAnnouncement(){
+		navigator.navigate('newAnnouncement');
+	}
 
 	return(
 		<SafeAreaView style={{flex: 1, backgroundColor: theme.colors.gray[600]}}>
 			<VStack px={6} flex={1}>
 				<Center mt={6} flexDirection={'row'} position={'relative'} alignItems={'center'}>
 					<Heading color={'gray.100'} fontSize={20} fontFamily={'body'}>Meus Anúncios</Heading>
-					<Pressable position={'absolute'} right={0}>
+					<Pressable onPress={handleNavigateToCreateNewAnnouncement} position={'absolute'} right={0}>
 						<Plus size={24} color={theme.colors.gray[100]} />
 					</Pressable>
 				</Center>

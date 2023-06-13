@@ -1,61 +1,51 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NativeStackNavigationProp, createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTheme } from 'native-base';
-import { House, SignOut, Tag } from 'phosphor-react-native';
 
-import { Home } from '@screens/Home';
-import { MyAnnouncements } from '@screens/MyAnnouncements';
+import { HomeRoutes } from './home.routes';
+import { NewAnnouncement } from '@screens/NewAnnouncement';
+import { DetailsAnnouncement } from '@screens/DetailsAnnouncement';
 
 type AuthRoutesParams = {
-	home: undefined;
-	myAnnouncement: undefined;
-	exit: undefined;
+	homeRoutes: undefined;
+	newAnnouncement: undefined;
+	detailAnnouncement: undefined;
 }
 
+const { Navigator, Screen } = createNativeStackNavigator<AuthRoutesParams>();
 
-const { Navigator, Screen } = createBottomTabNavigator<AuthRoutesParams>();
+export type AuthNavigatorRouteProps = NativeStackNavigationProp<AuthRoutesParams>;
 
 export function AuthRoutes(){
 	const theme = useTheme();
 
 	return(
 		<Navigator
-			screenOptions={{
-				headerShown: false,
-				tabBarShowLabel: false,
-				tabBarActiveTintColor: theme.colors.gray[200],
-				tabBarInactiveTintColor: theme.colors.gray[400],
-				tabBarStyle: {
-					backgroundColor: theme.colors.gray[700],
-					height: 80,
-					paddingTop: 20,
-					paddingBottom: 28,
+			screenOptions={() => {
+				return {
+					headerShown: false,
+					tabBarShowLabel: false,
+					tabBarActiveTintColor: theme.colors.gray[200],
+					tabBarInactiveTintColor: theme.colors.gray[400],
+					tabBarStyle: {
+						backgroundColor: theme.colors.gray[700],
+						height: 80,
+						paddingTop: 20,
+						paddingBottom: 28,
+					}
 				}
 			}}
 		>
 			<Screen 
-				name='home'
-				component={Home}
-				options={{
-					tabBarIcon: ({color}) => {
-						return <House weight="bold" color={color} size={24} />
-					} 
-				}}
+				name='homeRoutes'
+				component={HomeRoutes}
 			/>
 			<Screen 
-				name='myAnnouncement'
-				component={MyAnnouncements}
-				options={{
-					tabBarIcon: ({color}) => {
-						return <Tag weight="bold" color={color} size={24} />
-					}
-				}}
+				name='newAnnouncement'
+				component={NewAnnouncement}
 			/>
 			<Screen 
-				name='exit'
-				component={Home}
-				options={{
-					tabBarIcon: () => <SignOut size={24} weight="bold" color={theme.colors.red[400]} />
-				}}
+				name='detailAnnouncement'
+				component={DetailsAnnouncement}
 			/>
 		</Navigator>
 	)

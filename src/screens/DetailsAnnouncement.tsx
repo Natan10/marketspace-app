@@ -1,19 +1,25 @@
 import React from 'react';
 import { Avatar, HStack, View, useTheme, Text, VStack, Badge, Box, Heading, ScrollView, Button} from 'native-base';
-import { Pressable, SafeAreaView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Pressable } from 'react-native';
 import { ArrowLeft, Barcode, CreditCard, Money, QrCode, WhatsappLogo } from 'phosphor-react-native';
+
 import { ImageSlider } from '@components/ImageSlider';
 import { PaymentMethodLabel } from '@components/PaymentMethodLabel';
 
+import { AuthNavigatorRouteProps } from '@routes/auth.routes';
+
 export function DetailsAnnouncement() {
 	const theme = useTheme();
+
+	const navigator = useNavigation<AuthNavigatorRouteProps>();
 
 	return(
 		<VStack bgColor={'gray.600'} pt={9} flex={1}>
 			<ScrollView  showsVerticalScrollIndicator={false}>
 				<VStack pb={8}>
 					<View px={6} mt={3}>
-						<Pressable>
+						<Pressable onPress={() => navigator.goBack()}>
 							<ArrowLeft size={24} weight="bold" color={theme.colors.gray[200]} />
 						</Pressable>
 					</View>

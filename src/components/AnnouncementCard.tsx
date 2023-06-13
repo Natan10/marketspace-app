@@ -1,7 +1,9 @@
 import React from 'react';
-import { VStack, Box, Image, Text, Avatar } from 'native-base';
+import { VStack, Box, Image, Text, Avatar, Pressable } from 'native-base';
 
 import { AnnoucementDTO } from '@dtos/AnnoucementDTO';
+import { useNavigation } from '@react-navigation/native';
+import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 
 interface Props {
 	data: AnnoucementDTO;
@@ -10,19 +12,27 @@ interface Props {
 export function AnnouncementCard({data: {isNewProduct, isEnabled, price, title, avatar}}: Props){
 	const iNewTag = (isNewProduct ? 'Novo':'Usado').toUpperCase();
 
+	const navigator = useNavigation<AuthNavigatorRouteProps>();
+
+	function handleDetailsAnnouncement(){
+		navigator.navigate('detailAnnouncement')
+	}
+
 	return(
 		<VStack mt={4}>
 			<Box position={'relative'} w={165} h={120} bgColor={'red.500'} rounded={6}
-			>
-				<Image 
-					source={{
-						uri: 'https://doodleipsum.com/700/hand-drawn?i=f1e89bf777357d4ac29c8ecbde156bb1'
-					}}
-					alt='tenis vermelho'
-					opacity={isEnabled ? 100 : 40}
-					resizeMode='contain'
-					size={'full'}
-				/>
+			>	
+				<Pressable onPress={handleDetailsAnnouncement}>
+					<Image 
+						source={{
+							uri: 'https://doodleipsum.com/700/hand-drawn?i=f1e89bf777357d4ac29c8ecbde156bb1'
+						}}
+						alt='tenis vermelho'
+						opacity={isEnabled ? 100 : 40}
+						resizeMode='contain'
+						size={'full'}
+					/>
+				</Pressable>
 				<Box 
 					position={'absolute'} 
 					right={1} top={1.5} 

@@ -6,10 +6,18 @@ import { SearchInput } from '@components/SearchInput';
 import { SelectButton } from '@components/SelectButton';
 import { AnnouncementContainer } from '@components/AnnouncementContainer';
 import { annoucementsMock } from '../mocks/annoucements';
+import { useNavigation } from '@react-navigation/native';
+import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 
 export function Home(){
 	const [isVisibleFilter, setIsVisibleFilter] = useState(false);
 	const theme = useTheme();
+
+	const navigator = useNavigation<AuthNavigatorRouteProps>();
+
+	function handleCreateNewAnnouncement(){
+		navigator.navigate('newAnnouncement')
+	}
 
 	return(
 		<SafeAreaView style={{flex: 1, backgroundColor: theme.colors.gray[600]}}>
@@ -35,7 +43,7 @@ export function Home(){
 						</Text>
 					</HStack>
 
-					<Button bgColor={'gray.100'} rounded={6}>
+					<Button bgColor={'gray.100'} onPress={handleCreateNewAnnouncement} rounded={6}>
 						<HStack alignItems={'center'} space={2}>
 							<Plus size={16} color={theme.colors.gray[700]} />
 							<Text fontFamily={'body'} fontSize={'md'} color='gray.700'>Cria anúncio</Text>
