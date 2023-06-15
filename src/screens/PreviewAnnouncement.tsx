@@ -14,13 +14,13 @@ export function PreviewAnnouncement(){
 	return(
 		<VStack bgColor={'gray.600'} flex={1}>
 			<StatusBar barStyle={'light-content'} />
-			<ScrollView  showsVerticalScrollIndicator={false}>
+			<ScrollView showsVerticalScrollIndicator={false}>
 				<Center px={6} pb={8} pt={16} bgColor={'blue.400'} w={'full'}>
 					<Text color={'gray.700'} fontFamily={'body'} fontSize={16}>Pré visualização do anúncio</Text>
 					<Text color={'gray.700'} fontFamily={'heading'} fontSize={14}>É assim que seu produto vai aparecer!</Text>
 				</Center>
 
-				<View pb={8}>
+				<View pb={6}>
 					<AnnouncementData />			
 				</View>
 			</ScrollView>

@@ -1,10 +1,14 @@
 import React, { useRef, useState } from "react";
-import { FlatList, Image, Box, HStack } from "native-base";
+import { FlatList, Image, Box, HStack, Heading } from "native-base";
 import { ViewToken } from "react-native";
 
 interface ImageChangeProps {
 	viewableItems: ViewToken[];
 	changed: ViewToken[];
+}
+
+interface Props {
+	isDisabled: boolean;
 }
 
 export function ImageSlider(){
@@ -17,6 +21,18 @@ export function ImageSlider(){
 
 	return(
 		<Box position={'relative'}>
+			<Box 
+				h={'full'} 
+				w={'full'} 
+				zIndex={10}
+				position={'absolute'}  
+				bgColor={'gray.100'}
+				opacity={60} 
+				justifyContent={'center'}
+				alignItems={'center'}
+			>
+				<Heading color={'gray.700'} fontFamily={'body'} fontSize={16}>ANÚNCIO DESATIVADO</Heading>
+			</Box>
 			<FlatList 
 				data={imageCounter}
 				keyExtractor={item => String(item)}

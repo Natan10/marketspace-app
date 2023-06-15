@@ -15,7 +15,7 @@ export function AnnouncementCard({data: {isNewProduct, isEnabled, price, title, 
 	const navigator = useNavigation<AuthNavigatorRouteProps>();
 
 	function handleDetailsAnnouncement(){
-		navigator.navigate('detailAnnouncement')
+		navigator.navigate('publishAnnouncement')
 	}
 
 	return(
