@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { Platform, StatusBar } from 'react-native';
 import { HStack, ScrollView, VStack, Text, View, Button, Center, useTheme } from 'native-base';
 import { ArrowLeft, Tag } from 'phosphor-react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -13,7 +13,11 @@ export function PreviewAnnouncement(){
 
 	return(
 		<VStack bgColor={'gray.600'} flex={1}>
-			<StatusBar barStyle={'light-content'} />
+			<StatusBar 
+				barStyle={'light-content'}
+				translucent
+				backgroundColor={'transparent'} 
+			/>
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<Center px={6} pb={8} pt={16} bgColor={'blue.400'} w={'full'}>
 					<Text color={'gray.700'} fontFamily={'body'} fontSize={16}>Pré visualização do anúncio</Text>
@@ -26,7 +30,14 @@ export function PreviewAnnouncement(){
 			</ScrollView>
 
 			{/* Bottom */}
-			<HStack p={6} pb={'30'} space={4} bgColor={'gray.700'} alignItems={'center'} justifyContent={'space-between'}>
+			<HStack 
+				p={6} 
+				pb={Platform.OS === 'ios' ? 9 : 4}
+				space={4}
+				bgColor={'gray.700'} 
+				alignItems={'center'} 
+				justifyContent={'space-between'}
+			>
 				<Button onPress={() => navigator.goBack()} flex={1} rounded={6} bgColor={'gray.500'}>
 					<HStack alignItems={'center'} space={2}>
 						<ArrowLeft size={16} weight="thin" />

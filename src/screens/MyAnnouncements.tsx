@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { SafeAreaView } from "react-native";
+import { Platform, SafeAreaView } from "react-native";
 import { Center, Heading, View, useTheme, Text, Select, HStack, VStack, Pressable } from "native-base";
 import { CaretDown, Plus } from "phosphor-react-native";
 
@@ -18,7 +18,12 @@ export function MyAnnouncements(){
 	}
 
 	return(
-		<SafeAreaView style={{flex: 1, backgroundColor: theme.colors.gray[600]}}>
+		<SafeAreaView 
+			style={{
+				flex: 1, 
+				backgroundColor: theme.colors.gray[600],
+				paddingVertical: Platform.OS === 'android' ? 25:0 
+			}}>
 			<VStack px={6} flex={1}>
 				<Center mt={6} flexDirection={'row'} position={'relative'} alignItems={'center'}>
 					<Heading color={'gray.100'} fontSize={20} fontFamily={'body'}>Meus Anúncios</Heading>

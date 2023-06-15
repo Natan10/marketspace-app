@@ -4,6 +4,7 @@ import { House, SignOut, Tag } from 'phosphor-react-native';
 
 import { Home } from '@screens/Home';
 import { MyAnnouncements } from '@screens/MyAnnouncements';
+import { Platform } from 'react-native';
 
 type HomeRoutesParams = {
 	home: undefined;
@@ -30,9 +31,9 @@ export function HomeRoutes(){
 					tabBarInactiveTintColor: theme.colors.gray[400],
 					tabBarStyle: {
 						backgroundColor: theme.colors.gray[700],
-						height: 80,
+						height: Platform.OS === 'ios' ? 80 : 50,
 						paddingTop: 20,
-						paddingBottom: 28,
+						paddingBottom: 25,
 					}
 				}
 			}}

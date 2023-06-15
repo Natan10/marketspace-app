@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, StatusBar } from 'react-native';
 import { NativeBaseProvider } from "native-base";
 import { Karla_400Regular, Karla_700Bold, useFonts} from '@expo-google-fonts/karla';
 
@@ -18,6 +18,11 @@ export default function App() {
 
   return (
     <NativeBaseProvider theme={THEME}>
+			<StatusBar 
+				barStyle={'dark-content'} 
+				translucent
+				backgroundColor={'transparent'}
+			/>
 			<Routes/>
     </NativeBaseProvider>
   );

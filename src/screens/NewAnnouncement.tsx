@@ -85,13 +85,13 @@ export function NewAnnouncement(){
 						/>
 					</View>
 
-					<View mt={4}>
-						<Text color="gray.200" fontSize={16}>Aceita troca?</Text>
+					<HStack mt={4} alignItems={'center'} space={2}>
+						<Text color={'gray.200'} fontSize={14} bold>Aceita troca?</Text>
 						<Switch 
 							size="sm"
 							onTrackColor="blue.400" 
 						/>
-					</View>
+					</HStack>
 
 					<View mt={4}>
 						<Text color={'gray.200'} fontSize={16} bold>

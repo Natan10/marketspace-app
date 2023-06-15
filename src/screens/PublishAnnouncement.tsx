@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button, HStack, Pressable, ScrollView, VStack, View, Text, useTheme } from 'native-base';
+import { Button, HStack, Pressable, ScrollView, VStack, Text, useTheme } from 'native-base';
 import { ArrowLeft, PencilSimpleLine, Power, Trash } from 'phosphor-react-native';
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native';
+import { Platform, SafeAreaView } from 'react-native';
 import { AnnouncementData } from '@components/AnnouncementData';
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 
@@ -20,7 +20,13 @@ export function PublishAnnouncement(){
 	}
 
 	return(
-		<SafeAreaView style={{flex: 1, backgroundColor: bgColor}}>
+		<SafeAreaView 
+			style={{
+				flex: 1, 
+				backgroundColor: bgColor,
+				paddingVertical: Platform.OS === 'android' ? 25:0
+			}}
+		>
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<VStack pt={6}>
 					<HStack px={6} mb={4} alignItems={'center'} justifyContent={'space-between'}>

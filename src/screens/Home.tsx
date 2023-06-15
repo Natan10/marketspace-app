@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { HStack, VStack, Box, Image, Text, useTheme, Button, Pressable, FlatList, Center, Heading, Switch, Checkbox, View, ScrollView, } from 'native-base';
-import { Modal, SafeAreaView } from 'react-native';
+import { Modal, Platform, SafeAreaView } from 'react-native';
 import { ArrowRight, Plus, Tag, X } from 'phosphor-react-native';
 import { SearchInput } from '@components/SearchInput';
 import { SelectButton } from '@components/SelectButton';
@@ -20,7 +20,13 @@ export function Home(){
 	}
 
 	return(
-		<SafeAreaView style={{flex: 1, backgroundColor: theme.colors.gray[600]}}>
+		<SafeAreaView 
+			style={{
+				flex: 1, 
+				backgroundColor: theme.colors.gray[600],
+				paddingVertical: Platform.OS === 'android' ? 25:0 
+			}}
+		>
 			<VStack flex={1} px={6}>
 				{/* Header */}
 				<HStack mt={5} justifyContent={'space-between'}>
@@ -99,8 +105,7 @@ export function Home(){
 				</Box>
 
 				{/* announcement cards */}
-				
-				<Box flex={1} my={6}>
+				<Box flex={1} pb={2} mt={6}>
 					<AnnouncementContainer data={annoucementsMock}/>
 				</Box>
 				
@@ -123,106 +128,110 @@ export function Home(){
 										<X size={24} color={theme.colors.gray[400]} />
 									</Pressable>
 								</HStack>
+								
+								<View mb={4}>
+									<Text color={'gray.200'} fontSize={14} bold>Condição</Text>
+									<HStack alignItems={'center'} space={3} mt={3}>
+										<SelectButton isSelected title='novo' />
+										<SelectButton title='usado' />
+									</HStack>
+								</View>
 
-								<Text color={'gray.200'} fontSize={14} bold>Condição</Text>
-								<HStack alignItems={'center'} space={3} mt={3} mb={6}>
-									<SelectButton isSelected title='novo' />
-									<SelectButton title='usado' />
+								<HStack mb={4} alignItems={'center'} space={2}>
+									<Text color={'gray.200'} fontSize={14} bold>Aceita troca?</Text>
+									<Switch 
+										size="sm"
+										onTrackColor="blue.400" 
+									/>
 								</HStack>
 
-								<Text color={'gray.200'} fontSize={14} bold>Aceita troca?</Text>
-								<Switch 
-									mt={3}
-									mb={6}
-									size="sm"
-									onTrackColor="blue.400" 
-								/>
+								<View>
+									<Text color={'gray.200'} fontSize={14} bold>
+										Meios de pagamento aceitos
+									</Text>
 
-								<Text color={'gray.200'} fontSize={14} bold>
-									Meios de pagamento aceitos
-								</Text>
+									<Checkbox.Group mt={3}>
+										<Checkbox borderWidth={1} mb={2} 
+											_checked={{
+											bgColor: 'blue.400',
+											borderColor: 'blue.400'
+										}} 
+										_text={{
+											fontSize: 16,
+											color: 'gray.200',
+											fontFamily: 'heading',
+										}}
+										value='Teste'>
+											Boleto
+										</Checkbox>
+										<Checkbox borderWidth={1} mb={2} 
+											_checked={{
+											bgColor: 'blue.400',
+											borderColor: 'blue.400'
+										}} 
+										_text={{
+											fontSize: 16,
+											color: 'gray.200',
+											fontFamily: 'heading',
+										}}
+										value='Teste'>
+											Pix
+										</Checkbox>
+										<Checkbox borderWidth={1} mb={2} 
+											_checked={{
+											bgColor: 'blue.400',
+											borderColor: 'blue.400'
+										}} 
+										_text={{
+											fontSize: 16,
+											color: 'gray.200',
+											fontFamily: 'heading',
+										}}
+										value='Teste'>
+											Dinheiro
+										</Checkbox>
+										<Checkbox borderWidth={1} mb={2} 
+											_checked={{
+											bgColor: 'blue.400',
+											borderColor: 'blue.400'
+										}} 
+										_text={{
+											fontSize: 16,
+											color: 'gray.200',
+											fontFamily: 'heading',
+										}}
+										value='Teste'>
+											Cartão de Crédito
+										</Checkbox>
+										<Checkbox borderWidth={1} mb={2} 
+											_checked={{
+											bgColor: 'blue.400',
+											borderColor: 'blue.400'
+										}} 
+										_text={{
+											fontSize: 16,
+											color: 'gray.200',
+											fontFamily: 'heading',
+										}}
+										value='Teste'>
+											Cartão de Débito
+										</Checkbox>
+										<Checkbox borderWidth={1} 
+											_checked={{
+											bgColor: 'blue.400',
+											borderColor: 'blue.400'
+										}} 
+										_text={{
+											fontSize: 16,
+											color: 'gray.200',
+											fontFamily: 'heading',
+										}}
+										value='Teste'>
+											Depósito Bancário
+										</Checkbox>
 
-								<Checkbox.Group mt={3}>
-									<Checkbox borderWidth={1} mb={2} 
-										_checked={{
-										bgColor: 'blue.400',
-										borderColor: 'blue.400'
-									}} 
-									_text={{
-										fontSize: 16,
-										color: 'gray.200',
-										fontFamily: 'heading',
-									}}
-									value='Teste'>
-										Boleto
-									</Checkbox>
-									<Checkbox borderWidth={1} mb={2} 
-										_checked={{
-										bgColor: 'blue.400',
-										borderColor: 'blue.400'
-									}} 
-									_text={{
-										fontSize: 16,
-										color: 'gray.200',
-										fontFamily: 'heading',
-									}}
-									value='Teste'>
-										Pix
-									</Checkbox>
-									<Checkbox borderWidth={1} mb={2} 
-										_checked={{
-										bgColor: 'blue.400',
-										borderColor: 'blue.400'
-									}} 
-									_text={{
-										fontSize: 16,
-										color: 'gray.200',
-										fontFamily: 'heading',
-									}}
-									value='Teste'>
-										Dinheiro
-									</Checkbox>
-									<Checkbox borderWidth={1} mb={2} 
-										_checked={{
-										bgColor: 'blue.400',
-										borderColor: 'blue.400'
-									}} 
-									_text={{
-										fontSize: 16,
-										color: 'gray.200',
-										fontFamily: 'heading',
-									}}
-									value='Teste'>
-										Cartão de Crédito
-									</Checkbox>
-									<Checkbox borderWidth={1} mb={2} 
-										_checked={{
-										bgColor: 'blue.400',
-										borderColor: 'blue.400'
-									}} 
-									_text={{
-										fontSize: 16,
-										color: 'gray.200',
-										fontFamily: 'heading',
-									}}
-									value='Teste'>
-										Cartão de Débito
-									</Checkbox>
-									<Checkbox borderWidth={1} 
-										_checked={{
-										bgColor: 'blue.400',
-										borderColor: 'blue.400'
-									}} 
-									_text={{
-										fontSize: 16,
-										color: 'gray.200',
-										fontFamily: 'heading',
-									}}
-									value='Teste'>
-										Depósito Bancário
-									</Checkbox>
-
-								</Checkbox.Group>
+									</Checkbox.Group>
+								</View>
 							</VStack>
 
 							<HStack mt={"auto"} space={3}>
