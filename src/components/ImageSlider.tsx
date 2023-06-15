@@ -18,7 +18,6 @@ export function ImageSlider(){
 	return(
 		<Box position={'relative'}>
 			<FlatList 
-				mt={4}
 				data={imageCounter}
 				keyExtractor={item => String(item)}
 				horizontal

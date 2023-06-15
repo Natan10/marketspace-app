@@ -188,7 +188,7 @@ export function NewAnnouncement(){
 						Cancelar
 					</Text>
 				</Button>
-				<Button flex={1} rounded={6} bgColor={'gray.100'}>
+				<Button onPress={() => navigator.navigate('previewAnnouncement')} flex={1} rounded={6} bgColor={'gray.100'}>
 					<Text fontSize={14} color={'gray.700'}>
 						Avançar
 					</Text>

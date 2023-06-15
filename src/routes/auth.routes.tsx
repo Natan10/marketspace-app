@@ -4,11 +4,13 @@ import { useTheme } from 'native-base';
 import { HomeRoutes } from './home.routes';
 import { NewAnnouncement } from '@screens/NewAnnouncement';
 import { DetailsAnnouncement } from '@screens/DetailsAnnouncement';
+import { PreviewAnnouncement } from '@screens/PreviewAnnouncement';
 
 type AuthRoutesParams = {
 	homeRoutes: undefined;
 	newAnnouncement: undefined;
 	detailAnnouncement: undefined;
+	previewAnnouncement: undefined;
 }
 
 const { Navigator, Screen } = createNativeStackNavigator<AuthRoutesParams>();
@@ -46,6 +48,11 @@ export function AuthRoutes(){
 			<Screen 
 				name='detailAnnouncement'
 				component={DetailsAnnouncement}
+			/>
+
+			<Screen 
+				name='previewAnnouncement'
+				component={PreviewAnnouncement}
 			/>
 		</Navigator>
 	)

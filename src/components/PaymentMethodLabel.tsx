@@ -6,7 +6,6 @@ interface Props {
 	icon: JSX.Element;
 }
 
-
 export function PaymentMethodLabel({title, icon}: Props){
 	return(
 		<HStack alignItems={'center'} space={2}>
