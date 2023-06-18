@@ -16,12 +16,20 @@ import { PencilSimpleLine } from 'phosphor-react-native';
 
 import logo from '@assets/logo.png';
 import { Input } from '@components/Input';
+import { useNavigation } from '@react-navigation/native';
+import { PublicNavigatorRouteProps } from '@routes/public.routes';
 
 export function Register(){
 	const theme = useTheme();
+	const navigator = useNavigation<PublicNavigatorRouteProps>();
+
+
+	function handleSignIn(){
+		navigator.navigate('signIn');
+	}
 
   return(
-			<ScrollView bgColor={'gray.700'} pt={12}>
+			<ScrollView bgColor={'gray.700'} pt={12} showsVerticalScrollIndicator={false}>
 				<VStack
 					justifyContent={'center'}
 					alignItems={'center'}
@@ -31,10 +39,10 @@ export function Register(){
 				>	
 					<Center>
 						<Image size={60} source={logo} resizeMode='contain' alt='logo marketspace' />
-						<Heading color='gray.100' fontSize='3xl' fontFamily='bold'>
+						<Heading color='gray.100' fontSize='3xl' fontFamily='body'>
 							Boas vindas!
 						</Heading>
-						<Text textAlign='center' color='gray.300' fontFamily='heading' fontWeight='thin' fontSize='sm'>
+						<Text textAlign='center' color='gray.300' fontFamily='heading' fontSize='sm'>
 							Crie sua conta e use o espaço para comprar itens variados e vender seus produtos
 						</Text>
 					</Center>
@@ -76,15 +84,15 @@ export function Register(){
 
 						<Center w='full'>
 							<Button w='full' mt={6} mb={8} p={3} bgColor="gray.100" borderRadius={6}>
-								<Text fontSize={'md'} color={'gray.700'} fontWeight={'bold'} fontFamily={'bold'}>Criar</Text>
+								<Text fontSize={'md'} color={'gray.700'} fontFamily={'body'}>Criar</Text>
 							</Button>
 
 							<Text color='gray.200' fontSize='xs' fontFamily={'heading'}>
 								Já tem uma conta?
 							</Text>
 
-							<Button w='full' mt={4} p={3} bgColor="gray.500" borderRadius={6}>
-								<Text fontSize={'md'} color={'gray.200'} fontWeight={'bold'} fontFamily={'bold'}>
+							<Button onPress={handleSignIn} w='full' mt={4} p={3} bgColor="gray.500" borderRadius={6}>
+								<Text fontSize={'md'} color={'gray.200'} fontFamily={'body'}>
 									Ir para o login
 								</Text>
 							</Button>
