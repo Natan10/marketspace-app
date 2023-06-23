@@ -1,16 +1,45 @@
 import React from 'react';
-import { VStack, Image, Text, Center, Heading, useTheme, Button, ScrollView } from 'native-base';
+import { VStack, Image, Text, Center, Heading, useTheme, Button, ScrollView, View, useToast } from 'native-base';
+import { Controller, useForm } from 'react-hook-form';
+import { useNavigation } from '@react-navigation/native';
+import { z } from 'zod';
+import {zodResolver} from '@hookform/resolvers/zod';
 
 import logo from '@assets/logo.png';
 import { Input } from '@components/Input';
-import { useNavigation } from '@react-navigation/native';
 import { PublicNavigatorRouteProps } from '@routes/public.routes';
+import { useAuth } from '@contexts/AuthProvider';
+
+const schema = z.object({
+	email: z.string().email({message: 'E-mail inválido, insira corretamente.'}),
+	password: z.string().min(6, {message: 'Senha inválida'})
+});
+
+type FormProps = z.infer<typeof schema>;
 
 export function Login(){
 	const navigator = useNavigation<PublicNavigatorRouteProps>();
+	const { control, handleSubmit, formState: {errors} } = useForm<FormProps>({
+		resolver: zodResolver(schema)
+	});
+	const toast = useToast();
+	const {signIn} = useAuth();
 
 	function handleSignUp(){
 		navigator.navigate('signUp');
+	}
+
+	async function handleSignIn({email, password}: FormProps){
+		try {
+			await signIn({email, password});
+		}catch(e){
+			console.error(e);
+			toast.show({
+				title: 'Erro ao realizar login, tente novamente.',
+				backgroundColor: 'red.400',
+				placement: 'top'
+			});
+		}
 	}
 
   return(
@@ -36,16 +65,51 @@ export function Login(){
 					</Center>
 				</Center>
 	
-				<Center mt={20} px={12}>
-					<Text mb={4} color='gray.200' fontFamily={'heading'} fontSize='md' fontWeight={'normal'}>Acesse sua conta</Text>
+				<Center mt={16} px={12}>
+					<Center mb={4}>
+						<Text color='gray.200' fontFamily={'heading'} fontSize='md' fontWeight={'normal'}>Acesse sua conta</Text>
+						<Text color='red.500' fontFamily={'heading'}>{errors.email || errors.password ? 'E-mail ou Senha inválido.' : ' '}</Text>		
+					</Center>
 
-					<Input placeholder='E-mail' mb={4} />
-					<Input 
-						placeholder='Senha' 
-						hasPassword
+					<Controller
+						control={control}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<Input 
+								onChangeText={onChange} 
+								onBlur={onBlur}
+								placeholder='E-mail' 
+								autoCapitalize='none'
+								autoCorrect={false}
+								value={value}
+								mb={4} 
+							/>
+						)}
+						name="email"
 					/>
 
-					<Button w="full" p={3} mt={8} bgColor="blue.400" borderRadius={6}>
+					<Controller
+						control={control}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<Input 
+								onChangeText={onChange} 
+								onBlur={onBlur}
+								placeholder='Senha' 
+								hasPassword
+								value={value}
+								mb={4} 
+							/>
+						)}
+						name="password"
+					/>
+
+					<Button 
+						w="full"
+						p={3} 
+						mt={8} 
+						bgColor="blue.400"
+						borderRadius={6}
+						onPress={handleSubmit(handleSignIn)}
+					>
 						<Text fontSize={'md'} color={'gray.700'} fontFamily={'body'}>Entrar</Text>
 					</Button>
 				</Center>
