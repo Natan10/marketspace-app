@@ -1,12 +1,15 @@
 import React from "react";
 import { NavigationContainer } from '@react-navigation/native';
-import { AuthRoutes } from "./auth.routes";
 import { PublicRoutes } from "./public.routes";
+import { useAuth } from "@contexts/AuthProvider";
+import { AuthRoutes } from "./auth.routes";
 
 export function Routes(){
+	const {user} = useAuth();
+
 	return(
 		<NavigationContainer>
-			<PublicRoutes />
+			{user ? <AuthRoutes /> : <PublicRoutes />}
 		</NavigationContainer>
 	)
 }
