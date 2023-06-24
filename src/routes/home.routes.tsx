@@ -1,4 +1,4 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { BottomTabNavigationProp, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Pressable, useTheme } from 'native-base';
 import { House, SignOut, Tag } from 'phosphor-react-native';
 
@@ -12,6 +12,8 @@ type HomeRoutesParams = {
 	myAnnouncements: undefined;
 	exit: undefined;
 }
+
+export type HomeNavigatorRouteProps = BottomTabNavigationProp<HomeRoutesParams>;
 
 const { Navigator, Screen } = createBottomTabNavigator<HomeRoutesParams>();
 

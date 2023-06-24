@@ -31,7 +31,7 @@ export function Login(){
 
 	async function handleSignIn({email, password}: FormProps){
 		try {
-			await signIn({email, password});
+			await signIn({email: email.toLowerCase(), password});
 		}catch(e){
 			console.error(e);
 			toast.show({

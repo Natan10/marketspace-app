@@ -1,22 +1,46 @@
 import React, { useState } from 'react';
-import { HStack, VStack, Box, Image, Text, useTheme, Button, Pressable, FlatList, Center, Heading, Switch, Checkbox, View, ScrollView, } from 'native-base';
+import { 
+	HStack,
+	VStack,
+	Box,
+	Image,
+	Text,
+ 	useTheme,
+	Button,
+	Pressable,
+	Center,
+	Heading,
+	Switch,
+	Checkbox, 
+	View
+} from 'native-base';
 import { Modal, Platform, SafeAreaView } from 'react-native';
 import { ArrowRight, Plus, Tag, X } from 'phosphor-react-native';
+import { useNavigation } from '@react-navigation/native';
+
 import { SearchInput } from '@components/SearchInput';
 import { SelectButton } from '@components/SelectButton';
 import { AnnouncementContainer } from '@components/AnnouncementContainer';
 import { annoucementsMock } from '../mocks/annoucements';
-import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '@contexts/AuthProvider';
+import { staticURI } from '@services/api';
+
+import { HomeNavigatorRouteProps } from '@routes/home.routes';
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 
 export function Home(){
 	const [isVisibleFilter, setIsVisibleFilter] = useState(false);
 	const theme = useTheme();
+	const { user } = useAuth();
 
-	const navigator = useNavigation<AuthNavigatorRouteProps>();
+	const navigator = useNavigation<AuthNavigatorRouteProps & HomeNavigatorRouteProps>();
 
 	function handleCreateNewAnnouncement(){
 		navigator.navigate('newAnnouncement')
+	}
+
+	function handleMyAnnouncements(){
+		navigator.navigate('myAnnouncements');
 	}
 
 	return(
@@ -33,10 +57,10 @@ export function Home(){
 					<HStack space={3} alignItems={'center'}>
 						<Image 
 							source={{
-								uri: 'https://doodleipsum.com/700/avatar?i=a69d4814c4fc0154cc80b9d158fe6b1f'
+								uri: user && user.photo ? `${staticURI}/photos/${user.photo}` : 'https://doodleipsum.com/700/avatar?i=a69d4814c4fc0154cc80b9d158fe6b1f'
 							}}
 							alt='avatar'
-							resizeMode='contain'
+							resizeMode='cover'
 							size={50}
 							rounded={'full'}
 							borderWidth={1}
@@ -45,7 +69,7 @@ export function Home(){
 
 						<Text fontSize={16} fontFamily={'heading'}>
 							Boas vindas,{'\n'}
-							<Text fontFamily={'body'}>Maria!</Text>
+							<Text fontFamily={'body'}>{user?.username}!</Text>
 						</Text>
 					</HStack>
 
@@ -81,7 +105,7 @@ export function Home(){
 							</VStack>
 						</HStack>
 
-						<Pressable>
+						<Pressable onPress={handleMyAnnouncements}>
 							<HStack alignItems={'center'} space={2}>
 								<Text fontFamily={'body'} fontSize={14} color={'blue.500'}>Meus anúncios</Text>
 								<ArrowRight size={16} color={theme.colors.blue[500]} />
