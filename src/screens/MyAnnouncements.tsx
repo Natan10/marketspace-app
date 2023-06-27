@@ -1,23 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Platform, SafeAreaView } from "react-native";
-import { Center, Heading, View, useTheme, Text, Select, HStack, VStack, Pressable } from "native-base";
+import { Center, Heading, View, useTheme, Text, Select, HStack, VStack, Pressable, useToast } from "native-base";
 import { CaretDown, Plus } from "phosphor-react-native";
 
 import { AnnouncementContainer } from "@components/AnnouncementContainer";
-import { annoucementsMock } from "../mocks/annoucements";
+import { useAuth } from "@contexts/AuthProvider";
+
 import { AuthNavigatorRouteProps } from "@routes/auth.routes";
+import { Announcement } from "@dtos/AnnoucementDTO";
+import { api } from "@services/api";
+import { Load } from "@components/Load";
 
 export function MyAnnouncements(){
 	const theme = useTheme();
-
+	const toast = useToast();
+	const {user} = useAuth();
 	const navigator = useNavigation<AuthNavigatorRouteProps>();
+
+	const [isLoading, setIsLoading] = useState(false);
+	const [userAnnouncements, setUserAnnouncements] = useState<Announcement[]>([]);
 
 	function handleNavigateToCreateNewAnnouncement(){
 		navigator.navigate('newAnnouncement');
 	}
 
-	return(
+	async function loadAnnouncementsByUser() {
+		setIsLoading(true);
+		try {
+			const {data} = await api.get(`/announcements?userId=${user?.id}`);
+			setUserAnnouncements(data.data);
+		} catch(error) {
+			console.error(error);
+			toast.show({
+				title: 'Erro ao carregar anúncios',
+				backgroundColor: 'red.400',
+				placement: 'top'
+			});
+		} finally{
+			setIsLoading(false);
+		}
+	}
+
+	useEffect(() => {
+		loadAnnouncementsByUser();
+	}, []);
+
+	return isLoading ? <Load /> : (
 		<SafeAreaView 
 			style={{
 				flex: 1, 
@@ -33,7 +62,7 @@ export function MyAnnouncements(){
 				</Center>
 
 				<HStack mb={5} mt={8} alignItems={'center'} justifyContent={'space-between'}>
-					<Text color={'gray.200'} fontSize={14} fontFamily={'heading'}>9 anúncios</Text>
+					<Text color={'gray.200'} fontSize={14} fontFamily={'heading'}>{userAnnouncements.length} anúncios</Text>
 					<Select 
 						borderRadius={6} 
 						_text={{
@@ -53,7 +82,7 @@ export function MyAnnouncements(){
 				</HStack>
 					
 				<View flex={1} pb={6}>
-					<AnnouncementContainer data={annoucementsMock} />
+					<AnnouncementContainer data={userAnnouncements} />
 				</View>
 			</VStack>
 		</SafeAreaView>
