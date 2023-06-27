@@ -54,9 +54,12 @@ export function Home(){
 	async function myActiveAnnouncementsCount() {
 		try {
 			const userId = user?.id;
-			const isActive = true;
-			const {data} = await api.get(`/announcements?userId=${userId}&isActive=${isActive}`);
-			const count = data.data.length;
+			const {data} = await api.get(`/announcements?userId=${userId}`) as any;
+			const count = data.data.reduce((v: number, a: Announcement) => {
+				if(a.is_active) {
+					return v++;
+				}
+			},0);
 			setMyActiveAnnouncements(count);
 		} catch (error) {
 			console.error(error);
