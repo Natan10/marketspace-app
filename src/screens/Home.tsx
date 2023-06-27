@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
 	HStack,
 	VStack,
@@ -12,7 +12,8 @@ import {
 	Heading,
 	Switch,
 	Checkbox, 
-	View
+	View,
+	useToast
 } from 'native-base';
 import { Modal, Platform, SafeAreaView } from 'react-native';
 import { ArrowRight, Plus, Tag, X } from 'phosphor-react-native';
@@ -21,17 +22,24 @@ import { useNavigation } from '@react-navigation/native';
 import { SearchInput } from '@components/SearchInput';
 import { SelectButton } from '@components/SelectButton';
 import { AnnouncementContainer } from '@components/AnnouncementContainer';
-import { annoucementsMock } from '../mocks/annoucements';
 import { useAuth } from '@contexts/AuthProvider';
-import { staticURI } from '@services/api';
+import { Announcement } from '@dtos/AnnoucementDTO';
+
+import { api, staticURI } from '@services/api';
 
 import { HomeNavigatorRouteProps } from '@routes/home.routes';
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
+import { Load } from '@components/Load';
 
 export function Home(){
 	const [isVisibleFilter, setIsVisibleFilter] = useState(false);
 	const theme = useTheme();
+	const toast = useToast();
 	const { user } = useAuth();
+
+	const [isLoadingData, setIsLoadingData] = useState(false);
+	const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+	const [myActiveAnnouncements, setMyActiveAnnouncements] = useState(0);
 
 	const navigator = useNavigation<AuthNavigatorRouteProps & HomeNavigatorRouteProps>();
 
@@ -43,15 +51,60 @@ export function Home(){
 		navigator.navigate('myAnnouncements');
 	}
 
-	return(
+	async function myActiveAnnouncementsCount() {
+		try {
+			const userId = user?.id;
+			const isActive = true;
+			const {data} = await api.get(`/announcements?userId=${userId}&isActive=${isActive}`);
+			const count = data.data.length;
+			setMyActiveAnnouncements(count);
+		} catch (error) {
+			console.error(error);
+			toast.show({
+				title: 'Erro ao carregar contagem de anúncios ativos',
+				backgroundColor: 'red.400',
+				placement: 'top'
+			});
+		}
+	}
+
+	async function loadAnnouncements(){
+		try {
+			const { data } = await api.get('/announcements');
+			setAnnouncements(data.data);
+		} catch (error) {
+			console.error(error);
+			toast.show({
+				title: 'Erro ao carregar anúncios',
+				backgroundColor: 'red.400',
+				placement: 'top'
+			});
+		}
+	}
+	
+	useEffect(() => {
+		(async function(){
+			setIsLoadingData(true);
+			try {
+				Promise.allSettled([loadAnnouncements(), myActiveAnnouncementsCount()])		
+			} catch (error) {
+				console.error(error);
+			} finally {
+				setIsLoadingData(false);
+			}
+		})();
+	}, []);
+
+	return isLoadingData ? <Load/> : (
 		<SafeAreaView 
 			style={{
 				flex: 1, 
 				backgroundColor: theme.colors.gray[600],
-				paddingVertical: Platform.OS === 'android' ? 25:0 
+				paddingVertical: Platform.OS === 'android' ? 25:0,
 			}}
 		>
 			<VStack flex={1} px={6}>
+				
 				{/* Header */}
 				<HStack mt={5} justifyContent={'space-between'}>
 					<HStack space={3} alignItems={'center'}>
@@ -100,7 +153,7 @@ export function Home(){
 						<HStack alignItems={'center'} space={4}>
 							<Tag size={20} color={'rgba(54, 77, 157, 1)'} />
 							<VStack>
-								<Text color={'gray.200'} fontFamily={'body'} fontSize={'lg'}>4</Text>
+								<Text color={'gray.200'} fontFamily={'body'} fontSize={'lg'}>{myActiveAnnouncements}</Text>
 								<Text color={'gray.200'} fontFamily={'heading'} fontSize={'xs'}>anúncios ativos</Text>
 							</VStack>
 						</HStack>
@@ -130,7 +183,7 @@ export function Home(){
 
 				{/* announcement cards */}
 				<Box flex={1} pb={2} mt={6}>
-					<AnnouncementContainer data={annoucementsMock}/>
+					<AnnouncementContainer data={announcements}/>
 				</Box>
 				
 				{/* TODO - melhorar isso, fazendo scroll com o react-gesture-handler */}
@@ -269,7 +322,6 @@ export function Home(){
 						</VStack>
 					</VStack>
 				</Modal>
-
 			</VStack>
 		</SafeAreaView>
 	)

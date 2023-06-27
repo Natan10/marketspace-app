@@ -1,16 +1,18 @@
 import React from 'react';
 import { VStack, Box, Image, Text, Avatar, Pressable } from 'native-base';
 
-import { AnnoucementDTO } from '@dtos/AnnoucementDTO';
+import { AnnouncementCard as Model } from '@dtos/AnnoucementDTO';
 import { useNavigation } from '@react-navigation/native';
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 
 interface Props {
-	data: AnnoucementDTO;
+	data: Model;
 }
 
-export function AnnouncementCard({data: {isNewProduct, isEnabled, price, title, avatar}}: Props){
-	const iNewTag = (isNewProduct ? 'Novo':'Usado').toUpperCase();
+export function AnnouncementCard({data}: Props){
+	const {id, title, price, photos, isNew, isEnabled = true} = data;
+
+	const iNewTag = (isNew ? 'Novo':'Usado').toUpperCase();
 
 	const navigator = useNavigation<AuthNavigatorRouteProps>();
 
@@ -20,12 +22,12 @@ export function AnnouncementCard({data: {isNewProduct, isEnabled, price, title, 
 
 	return(
 		<VStack mt={4}>
-			<Box position={'relative'} w={165} h={120} bgColor={'red.500'} rounded={6}
+			<Box position={'relative'} w={165} h={120} bgColor={'gray.500'} rounded={6}
 			>	
 				<Pressable onPress={handleDetailsAnnouncement}>
 					<Image 
 						source={{
-							uri: 'https://doodleipsum.com/700/hand-drawn?i=f1e89bf777357d4ac29c8ecbde156bb1'
+							uri: photos.length > 0 ? photos[0] : 'https://doodleipsum.com/700/hand-drawn?i=f1e89bf777357d4ac29c8ecbde156bb1'
 						}}
 						alt='tenis vermelho'
 						opacity={isEnabled ? 100 : 40}
@@ -36,7 +38,7 @@ export function AnnouncementCard({data: {isNewProduct, isEnabled, price, title, 
 				<Box 
 					position={'absolute'} 
 					right={1} top={1.5} 
-					bgColor={isNewProduct ? 'blue.500':'gray.200'} 
+					bgColor={isNew ? 'blue.500':'gray.200'} 
 					px={2} py={0.5} 
 					rounded={'full'}
 					opacity={isEnabled ? 100: 40}
@@ -50,7 +52,7 @@ export function AnnouncementCard({data: {isNewProduct, isEnabled, price, title, 
 						{`Anúncio desativado`.toUpperCase()}
 					</Text>
 				)}
-				{avatar && (
+				{/* {photos.length > 0 && (
 					<Avatar 
 						source={{
 							uri: 'https://doodleipsum.com/700/avatar?i=0512365fbc5f44dc6d964e17e6900bb4'
@@ -62,7 +64,7 @@ export function AnnouncementCard({data: {isNewProduct, isEnabled, price, title, 
 						borderWidth={1}
 						borderColor={'gray.700'}
 					/>
-				)}
+				)} */}
 			</Box>
 			<Box>
 				<Text 
