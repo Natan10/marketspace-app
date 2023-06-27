@@ -10,9 +10,9 @@ import { PublishAnnouncement } from '@screens/PublishAnnouncement';
 type AuthRoutesParams = {
 	homeRoutes: undefined;
 	newAnnouncement: undefined;
-	detailAnnouncement: undefined;
+	detailAnnouncement: {announcementId: string, userId: string};
+	publishAnnouncement: {announcementId: string};
 	previewAnnouncement: undefined;
-	publishAnnouncement: undefined;
 }
 
 const { Navigator, Screen } = createNativeStackNavigator<AuthRoutesParams>();

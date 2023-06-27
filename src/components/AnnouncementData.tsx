@@ -3,6 +3,7 @@ import { Avatar, HStack, VStack, Text, Badge, Heading } from 'native-base';
 
 import { ImageSlider } from './ImageSlider';
 import { PaymentMethodLabels } from './PaymentMethodLabels';
+import { PaymentMethodsDTO } from '@dtos/PaymentMethodsDTO';
 
 interface Props {
 	userPhoto: string;
@@ -13,18 +14,20 @@ interface Props {
 	description: string;
 	isExchangeable: boolean;
 	photos: string[];
-	isDisabled: boolean;
+	paymentMethods: PaymentMethodsDTO;
 }
 
-export function AnnouncementData(){
+export function AnnouncementData({
+	userPhoto, userName, isNew, title, price, description, isExchangeable, photos, paymentMethods
+}: Props){
 	return(
 		<VStack>
-			<ImageSlider />
+			<ImageSlider photos={photos} />
 			<VStack px={6}>
 				<HStack mt={5} space={2} alignItems={'center'}>
 					<Avatar
 						source={{
-							uri: 'https://doodleipsum.com/700/avatar?i=5492b36b36fd72e8c51c8340deea025d'
+							uri: userPhoto ? userPhoto : 'https://doodleipsum.com/700/avatar?i=5492b36b36fd72e8c51c8340deea025d'
 						}} 
 						_image={{
 							resizeMode: 'contain'
@@ -33,7 +36,7 @@ export function AnnouncementData(){
 						borderWidth={'2'}
 						borderColor={'blue.400'} 
 					/>
-					<Text color={'gray.100'} fontSize={16} fontFamily={'heading'}>Makenna Baptista</Text>
+					<Text color={'gray.100'} fontSize={16} fontFamily={'heading'}>{userName}</Text>
 				</HStack>
 				
 				<Badge 
@@ -49,33 +52,35 @@ export function AnnouncementData(){
 						color: 'gray.200'
 					}}
 				>
-					{'Novo'.toUpperCase()}
+					{(isNew ? 'Novo' : 'Usado').toUpperCase()}
 				</Badge>
 
 				<HStack mt={2} alignItems={'center'} justifyContent={'space-between'}>
-					<Heading color='gray.100' fontFamily={'body'} fontSize={20}>Bicileta</Heading>
+					<Heading color='gray.100' fontFamily={'body'} fontSize={20}>{title}</Heading>
 					<Text color={'blue.500'} fontFamily={'body'} fontSize={20}>
 						<Text fontSize={14}>R$ </Text>
-						120,00
+						{price}
 					</Text>
 				</HStack>
 
 				<Text mt={2} color={'gray.200'} fontSize={14} fontFamily={'heading'} textAlign={'justify'}>
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non rem iure quisquam enim distinctio nihil, ratione labore reiciendis fuga nulla ipsam maiores expedita, assumenda earum dolorem sit possimus, illo magni?
+					{description}
 				</Text>
 				
 				<HStack mt={3} alignItems={'center'} space={2}>
 					<Text color={'gray.200'} bold fontSize={14}>
 						Aceita troca? 
 					</Text>
-					<Text color={'gray.200'} fontFamily={'heading'}>Sim</Text>
+					<Text color={'gray.200'} fontFamily={'heading'}>
+						{isExchangeable ? 'Sim' : 'Não'}
+					</Text>
 				</HStack>
 
 				<VStack mt={4}>
 					<Text color={'gray.200'} fontSize={'sm'} fontFamily={'body'}>Metodos de Pagamento:</Text>
 
 					<VStack mt={2}>
-						<PaymentMethodLabels />
+						<PaymentMethodLabels data={paymentMethods}/>
 					</VStack>
 				</VStack>
 			</VStack>

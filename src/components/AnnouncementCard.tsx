@@ -4,12 +4,15 @@ import { VStack, Box, Image, Text, Avatar, Pressable } from 'native-base';
 import { AnnouncementCard as Model } from '@dtos/AnnoucementDTO';
 import { useNavigation } from '@react-navigation/native';
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
+import { useAuth } from '@contexts/AuthProvider';
 
 interface Props {
 	data: Model;
+	announcementUserId: string;
 }
 
-export function AnnouncementCard({data}: Props){
+export function AnnouncementCard({data, announcementUserId}: Props){
+	const { user } = useAuth();
 	const {id, title, price, photos, isNew, isEnabled = true} = data;
 
 	const iNewTag = (isNew ? 'Novo':'Usado').toUpperCase();
@@ -17,7 +20,11 @@ export function AnnouncementCard({data}: Props){
 	const navigator = useNavigation<AuthNavigatorRouteProps>();
 
 	function handleDetailsAnnouncement(){
-		navigator.navigate('publishAnnouncement')
+		if(user?.id === announcementUserId) {
+			navigator.navigate('publishAnnouncement', {announcementId: String(id)})
+		}else{
+			navigator.navigate('detailAnnouncement', {announcementId: String(id), userId: announcementUserId})
+		}
 	}
 
 	return(

@@ -27,6 +27,7 @@ export function AnnouncementContainer({ data }: Props){
 						price: item.price,
 						title: item.title
 					}} 
+					announcementUserId={String(item.user_id)}
 				/>
 			)}
 		/>

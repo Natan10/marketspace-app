@@ -8,12 +8,14 @@ interface ImageChangeProps {
 }
 
 interface Props {
-	isDisabled: boolean;
+	isDisabled?: boolean;
+	photos: string[];
 }
 
-export function ImageSlider(){
+const defaultPhotos = ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ6kpF8ZlX8rMuyEOuR7PSLiCD_EDM4XLUQw&usqp=CAU']
+
+export function ImageSlider({isDisabled = false, photos}: Props){
 	const [currentIndex, setCurrentIndex] = useState(0);
-	const imageCounter = [1,2,3]
 	const currentIndexRef = useRef((info: ImageChangeProps) => {
 		const index = info.viewableItems[0].index!;
 		setCurrentIndex(index);
@@ -21,20 +23,22 @@ export function ImageSlider(){
 
 	return(
 		<Box position={'relative'}>
-			<Box 
-				h={'full'} 
-				w={'full'} 
-				zIndex={10}
-				position={'absolute'}  
-				bgColor={'gray.100'}
-				opacity={60} 
-				justifyContent={'center'}
-				alignItems={'center'}
-			>
-				<Heading color={'gray.700'} fontFamily={'body'} fontSize={16}>ANÚNCIO DESATIVADO</Heading>
-			</Box>
+			{isDisabled && (
+				<Box 
+					h={'full'} 
+					w={'full'} 
+					zIndex={10}
+					position={'absolute'}  
+					bgColor={'gray.100'}
+					opacity={60} 
+					justifyContent={'center'}
+					alignItems={'center'}
+				>
+					<Heading color={'gray.700'} fontFamily={'body'} fontSize={16}>ANÚNCIO DESATIVADO</Heading>
+				</Box>
+			)}
 			<FlatList 
-				data={imageCounter}
+				data={photos.length > 0 ? photos : defaultPhotos}
 				keyExtractor={item => String(item)}
 				horizontal
 				showsHorizontalScrollIndicator={false}
@@ -46,7 +50,7 @@ export function ImageSlider(){
 					return(
 						<Image 
 							source={{
-								uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ6kpF8ZlX8rMuyEOuR7PSLiCD_EDM4XLUQw&usqp=CAU'
+								uri: item
 							}}
 							resizeMode='cover'
 							alt='bike'
@@ -56,7 +60,7 @@ export function ImageSlider(){
 				}}
 			/>
 			<HStack position={'absolute'} bottom={'1'} space={1} px={'1'}>
-				{imageCounter.map((image, key) => (
+				{(photos.length > 0 ? photos : defaultPhotos).map((_, key) => (
 					<Box 
 						key={key} 
 						flex={1} h={1} 
