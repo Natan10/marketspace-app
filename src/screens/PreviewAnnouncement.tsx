@@ -1,12 +1,13 @@
 import React from 'react';
 import { Platform, StatusBar } from 'react-native';
-import { HStack, ScrollView, VStack, Text, View, Button, Center, useTheme } from 'native-base';
+import { HStack, ScrollView, VStack, Text, View, Center, useTheme } from 'native-base';
 import { ArrowLeft, Tag } from 'phosphor-react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 import { AnnouncementData } from '@components/AnnouncementData';
 import { usePreviewContext } from '@contexts/PreviewProvider';
+import { Button as ButtonComposition } from '@components/Button';
 import { PaymentMethodsDTO } from '@dtos/PaymentMethodsDTO';
 import { useAuth } from '@contexts/AuthProvider';
 import { staticURI } from '@services/api';
@@ -71,22 +72,33 @@ export function PreviewAnnouncement(){
 				alignItems={'center'} 
 				justifyContent={'space-between'}
 			>
-				<Button onPress={() => navigator.goBack()} flex={1} rounded={6} bgColor={'gray.500'}>
-					<HStack alignItems={'center'} space={2}>
-						<ArrowLeft size={16} weight="thin" />
-						<Text fontSize={14} color={'gray.200'}>
-							Voltar e editar
-						</Text>
-					</HStack>
-				</Button>
-				<Button flex={1} rounded={6} bgColor={'blue.400'}>
-					<HStack alignItems={'center'} space={2}>
-						<Tag size={16} weight="thin" color={theme.colors.gray[700]} />
-						<Text fontSize={14} color={'gray.700'}>
-							Publicar
-						</Text>
-					</HStack>
-				</Button>
+				<ButtonComposition.Root
+					onPress={() => navigator.goBack()}
+					flex={1}
+					rounded={6}
+					bgColor={'gray.500'}
+				>
+					<ButtonComposition.Icon 
+						icon={<ArrowLeft size={16} weight="thin" />}
+					/>
+					<ButtonComposition.TitleBold>
+						Voltar e Editar
+					</ButtonComposition.TitleBold>
+				</ButtonComposition.Root>
+
+				<ButtonComposition.Root
+					onPress={() => navigator.goBack()}
+					flex={1}
+					rounded={6}
+					bgColor={'blue.400'}
+				>
+					<ButtonComposition.Icon 
+						icon={<Tag size={16} weight="thin" color={theme.colors.gray[700]} />}
+					/>
+					<ButtonComposition.TitleBold color={'gray.700'}>
+						Publicar
+					</ButtonComposition.TitleBold>
+				</ButtonComposition.Root>
 			</HStack>
 		</VStack>
 	)

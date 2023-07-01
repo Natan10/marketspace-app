@@ -19,6 +19,7 @@ import { api } from '@services/api';
 import { Announcement } from '@dtos/AnnoucementDTO';
 import { Load } from '@components/Load';
 import { UserDTO } from '@dtos/UserDTO';
+import { Button as ButtonComposition } from '@components/Button';
 
 interface RouteParams {
 	params: {
@@ -117,12 +118,19 @@ export function DetailsAnnouncement() {
 					{details?.price}
 				</Text>
 
-				<Button bgColor={'blue.400'}>
-					<HStack alignItems={'center'} justifyContent={'space-between'} space={2}>
-						<WhatsappLogo size={16} weight='fill' color='white'/>
-						<Text color='gray.700' fontFamily={'body'} fontSize={14}>Entrar em contato</Text>
-					</HStack>
-				</Button>
+				<ButtonComposition.Root
+					bgColor={'blue.400'}
+				>
+					<ButtonComposition.Icon 
+						icon={<WhatsappLogo size={16} weight='fill' color='white'/>}
+					/>
+					<ButtonComposition.TitleBold
+						fontSize={14}
+						color={'gray.700'}
+					>
+						Entrar em contato
+					</ButtonComposition.TitleBold>
+				</ButtonComposition.Root>
 			</HStack>
 		</VStack>
 	)

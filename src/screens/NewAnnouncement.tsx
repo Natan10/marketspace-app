@@ -22,6 +22,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 import { UploadImage } from "@components/UploadImage";
+import { Button as ButtonComposition } from '@components/Button';
 import { Input } from "@components/Input";
 import { TextArea } from "@components/TextArea";
 import { AuthNavigatorRouteProps } from "@routes/auth.routes";
@@ -331,21 +332,21 @@ export function NewAnnouncement(){
 			</ScrollView>
 
 			<HStack p={6} pb={'30'} space={4} bgColor={'gray.700'} alignItems={'center'} justifyContent={'space-between'}>
-				<Button onPress={() => navigator.goBack()} flex={1} rounded={6} bgColor={'gray.500'}>
-					<Text fontSize={14} color={'gray.200'}>
+				<ButtonComposition.Root onPress={() => navigator.goBack()} bgColor={'gray.500'} flex={1} rounded={6}>
+					<ButtonComposition.TitleBold fontSize={14} color={'gray.200'}>
 						Cancelar
-					</Text>
-				</Button>
-				<Button 
-					flex={1} 
-					rounded={6} 
-					bgColor={'gray.100'}
-					onPress={handleSubmit(handleCreateNewAnnouncement)}
+					</ButtonComposition.TitleBold>
+				</ButtonComposition.Root>
+				
+				<ButtonComposition.Root 
+					onPress={handleSubmit(handleCreateNewAnnouncement)} 
+					bgColor={'gray.100'} flex={1} 
+					rounded={6}
 				>
-					<Text fontSize={14} color={'gray.700'}>
+					<ButtonComposition.TitleBold fontSize={14} color={'gray.700'}>
 						Avançar
-					</Text>
-				</Button>
+					</ButtonComposition.TitleBold>
+				</ButtonComposition.Root>
 			</HStack>
 		</VStack>
 	)
