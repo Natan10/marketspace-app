@@ -6,6 +6,7 @@ import { Karla_400Regular, Karla_700Bold, useFonts} from '@expo-google-fonts/kar
 import { THEME } from '@theme/.';
 import { Routes } from '@routes/index';
 import { AuthProvider } from '@contexts/AuthProvider';
+import { PreviewProvider } from '@contexts/PreviewProvider';
 
 export default function App() {
 	const [fontsLoaded] = useFonts({
@@ -20,12 +21,14 @@ export default function App() {
   return (
     <NativeBaseProvider theme={THEME}>
 			<AuthProvider>
-				<StatusBar 
-					barStyle={'dark-content'} 
-					translucent
-					backgroundColor={'transparent'}
-				/>
-				<Routes/>
+				<PreviewProvider>
+					<StatusBar 
+						barStyle={'dark-content'} 
+						translucent
+						backgroundColor={'transparent'}
+						/>
+					<Routes/>
+				</PreviewProvider>
 			</AuthProvider>
     </NativeBaseProvider>
   );

@@ -31,3 +31,13 @@ export interface Announcement {
 	user_id: number;
 	payment_methods: PaymentMethodsDTO
 }
+
+export interface AnnouncementPreviewDTO {
+	title: string;
+	description: string;
+	images: string[];
+	isExchangeable: boolean;
+	isNew: boolean;
+	price: number;
+	paymentMethods: string[]
+}
