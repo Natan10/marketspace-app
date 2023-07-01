@@ -6,10 +6,33 @@ import { useNavigation } from '@react-navigation/native';
 
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 import { AnnouncementData } from '@components/AnnouncementData';
+import { usePreviewContext } from '@contexts/PreviewProvider';
+import { PaymentMethodsDTO } from '@dtos/PaymentMethodsDTO';
+import { useAuth } from '@contexts/AuthProvider';
+import { staticURI } from '@services/api';
+
+const paymentMethodsMapper: PaymentMethodsDTO = {
+	pix: false,
+	bank_deposit: false,
+	boleto: false,
+	cash: false,
+	credit_card: false
+} 
 
 export function PreviewAnnouncement(){
 	const theme = useTheme();
 	const navigator = useNavigation<AuthNavigatorRouteProps>();
+	const { user } = useAuth();
+	const { previewData } = usePreviewContext();
+
+	const labels: PaymentMethodsDTO = Object.keys(paymentMethodsMapper).reduce((p: any,v: any) => {
+		if(previewData.paymentMethods.includes(v)){
+			p[v] = true;
+		}
+		return p;
+	}, paymentMethodsMapper);
+
+	const userPhoto = user ? `${staticURI}/photos/${user.photo}` : ''
 
 	return(
 		<VStack bgColor={'gray.600'} flex={1}>
@@ -25,7 +48,17 @@ export function PreviewAnnouncement(){
 				</Center>
 
 				<View pb={6}>
-					<AnnouncementData />			
+					<AnnouncementData 
+						description={previewData.description}
+						title={previewData.title}
+						isExchangeable={previewData.isExchangeable}
+						isNew={previewData.isNew}
+						price={previewData.price}
+						photos={previewData.images}
+						paymentMethods={labels}
+						userName={user?.username || ''}
+						userPhoto={userPhoto}
+					/>			
 				</View>
 			</ScrollView>
 

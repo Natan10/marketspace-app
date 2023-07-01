@@ -20,6 +20,7 @@ interface Props {
 export function AnnouncementData({
 	userPhoto, userName, isNew, title, price, description, isExchangeable, photos, paymentMethods
 }: Props){
+
 	return(
 		<VStack>
 			<ImageSlider photos={photos} />
@@ -30,7 +31,7 @@ export function AnnouncementData({
 							uri: userPhoto ? userPhoto : 'https://doodleipsum.com/700/avatar?i=5492b36b36fd72e8c51c8340deea025d'
 						}} 
 						_image={{
-							resizeMode: 'contain'
+							resizeMode: 'cover'
 						}}
 						size={8}
 						borderWidth={'2'}
