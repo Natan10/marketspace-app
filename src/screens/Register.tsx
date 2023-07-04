@@ -131,7 +131,7 @@ export function Register(){
 						h={'full'}
 					>	
 						<Center>
-							<Image size={60} source={logo} resizeMode='contain' alt='logo marketspace' />
+							<Image size={60} source={logo} resizeMode='cover' alt='logo marketspace' />
 							<Heading color='gray.100' fontSize='3xl' fontFamily='body'>
 								Boas vindas!
 							</Heading>

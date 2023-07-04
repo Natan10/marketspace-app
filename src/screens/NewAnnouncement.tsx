@@ -11,7 +11,6 @@ import {
 	useTheme,
 	HStack,
 	Switch,
-	Button,
 	Checkbox, 
 } from "native-base";
 import { useNavigation } from "@react-navigation/native";
@@ -50,7 +49,7 @@ export function NewAnnouncement(){
 	const { setPreviewData } = usePreviewContext()
 
 	const [photos, setPhotos] = useState<string[]>([]);
-
+	
 	async function handleCreateNewAnnouncement(data: FormProps){
 		setPreviewData({
 			title: data.title,

@@ -25,6 +25,7 @@ import { HomeNavigatorRouteProps } from '@routes/home.routes';
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 import { Load } from '@components/Load';
 import { FilterModal } from '@components/FilterModal';
+import { getAvatarUrl } from '@helpers/getURIs';
 
 export function Home(){
 	const [isVisibleFilter, setIsVisibleFilter] = useState(false);
@@ -108,7 +109,7 @@ export function Home(){
 					<HStack space={3} alignItems={'center'}>
 						<Image 
 							source={{
-								uri: user && user.photo ? `${staticURI}/photos/${user.photo}` : 'https://doodleipsum.com/700/avatar?i=a69d4814c4fc0154cc80b9d158fe6b1f'
+								uri: user && user.photo ? getAvatarUrl(user) : 'https://doodleipsum.com/700/avatar?i=a69d4814c4fc0154cc80b9d158fe6b1f'
 							}}
 							alt='avatar'
 							resizeMode='cover'

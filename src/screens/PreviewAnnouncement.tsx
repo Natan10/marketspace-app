@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Platform, StatusBar } from 'react-native';
-import { HStack, ScrollView, VStack, Text, View, Center, useTheme } from 'native-base';
+import { HStack, ScrollView, VStack, Text, View, Center, useTheme, useToast } from 'native-base';
 import { ArrowLeft, Tag } from 'phosphor-react-native';
 import { useNavigation } from '@react-navigation/native';
+import 'react-native-get-random-values';
+import { v4 } from 'uuid';
 
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
-import { AnnouncementData } from '@components/AnnouncementData';
-import { usePreviewContext } from '@contexts/PreviewProvider';
 import { Button as ButtonComposition } from '@components/Button';
-import { PaymentMethodsDTO } from '@dtos/PaymentMethodsDTO';
+import { AnnouncementData } from '@components/AnnouncementData';
+import { Load } from '@components/Load';
+import { usePreviewContext } from '@contexts/PreviewProvider';
 import { useAuth } from '@contexts/AuthProvider';
-import { staticURI } from '@services/api';
+import { PaymentMethodsDTO } from '@dtos/PaymentMethodsDTO';
+import { api, staticURI } from '@services/api';
 
 const paymentMethodsMapper: PaymentMethodsDTO = {
 	pix: false,
@@ -22,9 +25,12 @@ const paymentMethodsMapper: PaymentMethodsDTO = {
 
 export function PreviewAnnouncement(){
 	const theme = useTheme();
+	const toast = useToast();
 	const navigator = useNavigation<AuthNavigatorRouteProps>();
 	const { user } = useAuth();
 	const { previewData } = usePreviewContext();
+
+	const [isLoading, setIsLoading] = useState(false);
 
 	const labels: PaymentMethodsDTO = Object.keys(paymentMethodsMapper).reduce((p: any,v: any) => {
 		if(previewData.paymentMethods.includes(v)){
@@ -35,7 +41,65 @@ export function PreviewAnnouncement(){
 
 	const userPhoto = user ? `${staticURI}/photos/${user.photo}` : ''
 
-	return(
+	async function handleCreate(){
+		setIsLoading(true);
+		try {
+			const { images } = previewData;
+			const fileNames: string[] = [];
+			
+			if(images.length > 0) {
+				const form = new FormData();
+				images.forEach(photo => {
+					const id = v4();
+					const format = photo.split('.').pop();
+					const fileName = `${id}.${format}`.toLowerCase();
+					form.append('images', {
+						uri: photo,
+						name: fileName,
+						type: `image/${format}`
+					} as any);
+					fileNames.push(fileName);
+				});
+
+				await api.post('/announcements/upload',form, {
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					}
+				});
+			} 
+
+			const req = await api.post('/announcements', {
+				title: previewData.title,
+				description: previewData.description,
+				is_new: previewData.isNew,
+				price: previewData.price,
+				is_exchangeable: previewData.isExchangeable,
+				is_active: true,
+				images : fileNames,
+				user_id: Number(user!.id),
+				paymentMethods: labels, 
+			});
+
+			toast.show({
+				title: 'Anúncio criado com sucesso',
+				backgroundColor: 'green.400',
+				placement: 'top'
+			});
+
+			navigator.navigate('homeRoutes');
+		} catch (error) {
+			console.error(error);
+			toast.show({
+				title: 'Erro ao criar anúncio, tente novamente.',
+				backgroundColor: 'red.400',
+				placement: 'top'
+			});
+		} finally {
+			setIsLoading(false);
+		}
+	}
+
+	return isLoading ? <Load /> : (
 		<VStack bgColor={'gray.600'} flex={1}>
 			<StatusBar 
 				barStyle={'light-content'}
@@ -87,7 +151,7 @@ export function PreviewAnnouncement(){
 				</ButtonComposition.Root>
 
 				<ButtonComposition.Root
-					onPress={() => navigator.goBack()}
+					onPress={handleCreate}
 					flex={1}
 					rounded={6}
 					bgColor={'blue.400'}
