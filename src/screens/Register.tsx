@@ -25,7 +25,7 @@ import { Input } from '@components/Input';
 import { useNavigation } from '@react-navigation/native';
 import { PublicNavigatorRouteProps } from '@routes/public.routes';
 import { api } from '@services/api';
-import { Load } from '@components/Load';
+import { LoadRoot } from '@components/Load';
 import { SafeAreaView } from 'react-native';
 
 const DEFAULT_IMAGE = 'https://doodleipsum.com/700/avatar?i=d2b2ff85c278d7c56198ac487777f9d5'
@@ -253,5 +253,5 @@ export function Register(){
 					</VStack>
 				</ScrollView>
 			</SafeAreaView>
-	) : (<Load />)
+	) : (<LoadRoot.Screen />)
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { 
 	HStack,
 	VStack,
@@ -23,7 +23,7 @@ import { api, staticURI } from '@services/api';
 
 import { HomeNavigatorRouteProps } from '@routes/home.routes';
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
-import { Load } from '@components/Load';
+import { LoadRoot } from '@components/Load';
 import { FilterModal } from '@components/FilterModal';
 import { getAvatarUrl } from '@helpers/getURIs';
 
@@ -33,7 +33,7 @@ export function Home(){
 	const toast = useToast();
 	const { user } = useAuth();
 
-	const [isLoadingData, setIsLoadingData] = useState(false);
+	const [isLoadingData, setIsLoadingData] = useState(true);
 	const [announcements, setAnnouncements] = useState<Announcement[]>([]);
 	const [myActiveAnnouncements, setMyActiveAnnouncements] = useState(0);
 
@@ -82,9 +82,8 @@ export function Home(){
 		}
 	}
 	
-	useEffect(() => {
+	useLayoutEffect(() => {
 		(async function(){
-			setIsLoadingData(true);
 			try {
 				Promise.allSettled([loadAnnouncements(), myActiveAnnouncementsCount()])		
 			} catch (error) {
@@ -95,8 +94,7 @@ export function Home(){
 		})();
 	}, []);
 
-	return isLoadingData ? <Load/> : (
-		<SafeAreaView 
+	return (<SafeAreaView 
 			style={{
 				flex: 1, 
 				backgroundColor: theme.colors.gray[600],
@@ -149,32 +147,35 @@ export function Home(){
 					<Text color={'gray.300'} fontSize={'sm'} fontFamily={'heading'}>
 						Seus produtos anunciados para venda 
 					</Text>
-					{/* Card */}
-					<HStack
-						p={4}
-						mt={3} 
-						w={'full'}
-						rounded={6} 
-						bgColor={'blue.400:alpha.20'}
-						alignItems={'center'}
-						justifyContent={'space-between'}
-					>
-						{/* Icon */}
-						<HStack alignItems={'center'} space={4}>
-							<Tag size={20} color={'rgba(54, 77, 157, 1)'} />
-							<VStack>
-								<Text color={'gray.200'} fontFamily={'body'} fontSize={'lg'}>{myActiveAnnouncements}</Text>
-								<Text color={'gray.200'} fontFamily={'heading'} fontSize={'xs'}>anúncios ativos</Text>
-							</VStack>
-						</HStack>
-
-						<Pressable onPress={handleMyAnnouncements}>
-							<HStack alignItems={'center'} space={2}>
-								<Text fontFamily={'body'} fontSize={14} color={'blue.500'}>Meus anúncios</Text>
-								<ArrowRight size={16} color={theme.colors.blue[500]} />
+					
+					{isLoadingData ? (
+						<LoadRoot.Heading mt={3} />
+					) : (
+						<HStack
+							p={4}
+							mt={3} 
+							w={'full'}
+							rounded={6} 
+							bgColor={'blue.400:alpha.20'}
+							alignItems={'center'}
+							justifyContent={'space-between'}
+						>
+							<HStack alignItems={'center'} space={4}>
+								<Tag size={20} color={'rgba(54, 77, 157, 1)'} />
+								<VStack>
+									<Text color={'gray.200'} fontFamily={'body'} fontSize={'lg'}>{myActiveAnnouncements}</Text>
+									<Text color={'gray.200'} fontFamily={'heading'} fontSize={'xs'}>anúncios ativos</Text>
+								</VStack>
 							</HStack>
-						</Pressable>
-					</HStack>
+
+							<Pressable onPress={handleMyAnnouncements}>
+								<HStack alignItems={'center'} space={2}>
+									<Text fontFamily={'body'} fontSize={14} color={'blue.500'}>Meus anúncios</Text>
+									<ArrowRight size={16} color={theme.colors.blue[500]} />
+								</HStack>
+							</Pressable>
+						</HStack> 
+					)}
 				</Box>
 
 				{/* Search Field */}
@@ -193,7 +194,11 @@ export function Home(){
 
 				{/* announcement cards */}
 				<Box flex={1} pb={2} mt={6}>
-					<AnnouncementContainer data={announcements}/>
+					{isLoadingData ? (
+						<LoadRoot.Card />
+					):(
+						<AnnouncementContainer data={announcements}/>
+					)}
 				</Box>
 				
 				<FilterModal 

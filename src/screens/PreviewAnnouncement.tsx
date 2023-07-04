@@ -9,7 +9,7 @@ import { v4 } from 'uuid';
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 import { Button as ButtonComposition } from '@components/Button';
 import { AnnouncementData } from '@components/AnnouncementData';
-import { Load } from '@components/Load';
+import { LoadRoot } from '@components/Load';
 import { usePreviewContext } from '@contexts/PreviewProvider';
 import { useAuth } from '@contexts/AuthProvider';
 import { PaymentMethodsDTO } from '@dtos/PaymentMethodsDTO';
@@ -68,7 +68,7 @@ export function PreviewAnnouncement(){
 				});
 			} 
 
-			const req = await api.post('/announcements', {
+			await api.post('/announcements', {
 				title: previewData.title,
 				description: previewData.description,
 				is_new: previewData.isNew,
@@ -99,7 +99,7 @@ export function PreviewAnnouncement(){
 		}
 	}
 
-	return isLoading ? <Load /> : (
+	return isLoading ? <LoadRoot.Screen /> : (
 		<VStack bgColor={'gray.600'} flex={1}>
 			<StatusBar 
 				barStyle={'light-content'}

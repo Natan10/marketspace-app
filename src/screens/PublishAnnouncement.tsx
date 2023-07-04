@@ -8,7 +8,7 @@ import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 import { api } from '@services/api';
 import { useAuth } from '@contexts/AuthProvider';
 import { Announcement } from '@dtos/AnnoucementDTO';
-import { Load } from '@components/Load';
+import { LoadRoot } from '@components/Load';
 
 export function PublishAnnouncement(){
 	const navigator = useNavigation<AuthNavigatorRouteProps>();
@@ -41,7 +41,7 @@ export function PublishAnnouncement(){
 		loadAnnouncementData();
 	},[]);
 
-	return isLoading ? <Load /> : (
+	return isLoading ? <LoadRoot.Screen /> : (
 		<SafeAreaView 
 			style={{
 				flex: 1, 

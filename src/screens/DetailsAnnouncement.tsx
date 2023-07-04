@@ -6,7 +6,6 @@ import {
 	Text,
 	VStack,
 	ScrollView,
-	Button,
 	useToast,
 } from 'native-base';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -17,7 +16,7 @@ import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 import { AnnouncementData } from '@components/AnnouncementData';
 import { api } from '@services/api';
 import { Announcement } from '@dtos/AnnoucementDTO';
-import { Load } from '@components/Load';
+import { LoadRoot } from '@components/Load';
 import { UserDTO } from '@dtos/UserDTO';
 import { Button as ButtonComposition } from '@components/Button';
 
@@ -84,7 +83,7 @@ export function DetailsAnnouncement() {
 		})();
 	}, []);
 
-	return isLoading ? <Load/> : (
+	return isLoading ? <LoadRoot.Screen/> : (
 		<VStack bgColor={'gray.600'} pt={9} flex={1}>
 			<ScrollView  showsVerticalScrollIndicator={false}>
 				<VStack pb={8}>

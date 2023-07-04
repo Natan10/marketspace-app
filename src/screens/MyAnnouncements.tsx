@@ -10,7 +10,7 @@ import { useAuth } from "@contexts/AuthProvider";
 import { AuthNavigatorRouteProps } from "@routes/auth.routes";
 import { Announcement } from "@dtos/AnnoucementDTO";
 import { api } from "@services/api";
-import { Load } from "@components/Load";
+import { LoadRoot } from "@components/Load";
 
 export function MyAnnouncements(){
 	const theme = useTheme();
@@ -46,7 +46,7 @@ export function MyAnnouncements(){
 		loadAnnouncementsByUser();
 	}, []);
 
-	return isLoading ? <Load /> : (
+	return (
 		<SafeAreaView 
 			style={{
 				flex: 1, 
@@ -82,7 +82,9 @@ export function MyAnnouncements(){
 				</HStack>
 					
 				<View flex={1} pb={6}>
-					<AnnouncementContainer data={userAnnouncements} />
+					{isLoading ? <LoadRoot.Card /> : (
+						<AnnouncementContainer data={userAnnouncements} />
+					)}
 				</View>
 			</VStack>
 		</SafeAreaView>

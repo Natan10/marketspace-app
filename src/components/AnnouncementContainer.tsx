@@ -3,7 +3,6 @@ import { AnnouncementCard } from './AnnouncementCard';
 import { Box, FlatList } from 'native-base';
 
 import { Announcement } from '@dtos/AnnoucementDTO';
-
 interface Props {
 	data: Announcement[];
 }
