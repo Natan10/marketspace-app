@@ -1,25 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, HStack, Pressable, ScrollView, VStack, Text, useTheme } from 'native-base';
 import { ArrowLeft, PencilSimpleLine, Power, Trash } from 'phosphor-react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Platform, SafeAreaView } from 'react-native';
 import { AnnouncementData } from '@components/AnnouncementData';
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
+import { api } from '@services/api';
+import { useAuth } from '@contexts/AuthProvider';
+import { Announcement } from '@dtos/AnnoucementDTO';
+import { Load } from '@components/Load';
 
 export function PublishAnnouncement(){
 	const navigator = useNavigation<AuthNavigatorRouteProps>();
 	const theme = useTheme();
+	const { user } = useAuth();
+	const {params} = useRoute() as any;
 
-	const iconColor = theme.colors.gray[200]
-	const bgColor = theme.colors.gray[600]
+	const [data, setData] = useState<Announcement | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
-	const isDisabled = false;
+	const iconColor = theme.colors.gray[200];
+	const bgColor = theme.colors.gray[600];
 
 	function handleEdit(){
 		navigator.navigate('newAnnouncement')
 	}
 
-	return(
+	async function loadAnnouncementData(){
+		try {
+			const {data} = await api.get(`/announcements/${params.announcementId}?userId=${user?.id}`);
+			setData(data.data);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setIsLoading(false);
+		}
+	}
+
+	useEffect(() => {
+		loadAnnouncementData();
+	},[]);
+
+	return isLoading ? <Load /> : (
 		<SafeAreaView 
 			style={{
 				flex: 1, 
@@ -38,18 +60,31 @@ export function PublishAnnouncement(){
 							<PencilSimpleLine size={24} weight="bold" color={iconColor} />
 						</Pressable>
 					</HStack>
-
-					<AnnouncementData />
+					
+					{data && (
+						<AnnouncementData 
+							title={data.title}
+							description={data.description}
+							isNew={data.is_new}
+							isExchangeable={data.is_exchangeable}
+							price={data.price}
+							paymentMethods={data.payment_methods}
+							photos={data.images}
+							isActive={data.is_active}
+							userName={user?.username || ''}
+							userPhoto={user?.photo || ''}
+						/>
+					)}
 
 					<VStack px={6} mt={6} space={2}>
 						<Button 
-							bgColor={ isDisabled ? 'blue.400':'gray.100'} 
+							bgColor={!data?.is_active ? 'blue.400':'gray.100'} 
 							p={3} 
 							rounded={6}
 						>
 							<HStack alignItems={'center'} space={2}>
 								<Power size={16} color={theme.colors.gray[600]} />
-								<Text fontFamily={'body'} color={'gray.700'}>{isDisabled ? 'Reativar' : 'Desativar'} anúncio</Text>
+								<Text fontFamily={'body'} color={'gray.700'}>{!data?.is_active ? 'Reativar' : 'Desativar'} anúncio</Text>
 							</HStack>
 						</Button>
 						<Button bgColor={'gray.500'} p={3} rounded={6}>

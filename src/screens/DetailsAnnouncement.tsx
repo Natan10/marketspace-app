@@ -34,7 +34,7 @@ export function DetailsAnnouncement() {
 	const navigator = useNavigation<AuthNavigatorRouteProps>();
 	const { params } = useRoute() as RouteParams;
 
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 	const [details, setDetails] = useState<Announcement | null>(null);
 	const [userAnnouncementInformation, setUserAnnouncementInformation] = useState<UserDTO>({} as UserDTO)
 
@@ -74,7 +74,6 @@ export function DetailsAnnouncement() {
 
 	useEffect(() => {
 		(async function(){
-			setIsLoading(true);
 			try {
 				Promise.all([loadAnnouncementUserInformation(), loadAnnouncementDetails()])
 			} catch (error) {
@@ -103,6 +102,7 @@ export function DetailsAnnouncement() {
 							isExchangeable={details.is_exchangeable}
 							photos={details.images}
 							price={details.price}
+							isActive={details.is_active}
 							paymentMethods={details.payment_methods}
 							userName={userAnnouncementInformation.username}
 							userPhoto={userAnnouncementInformation.photo}

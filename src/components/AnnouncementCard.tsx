@@ -5,11 +5,14 @@ import { AnnouncementCard as Model } from '@dtos/AnnoucementDTO';
 import { useNavigation } from '@react-navigation/native';
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 import { useAuth } from '@contexts/AuthProvider';
+import { getAnnouncementPhotosUrl } from '@helpers/getURIs';
 
 interface Props {
 	data: Model;
 	announcementUserId: string;
 }
+
+const DEFAULT_PHOTO = "https://doodleipsum.com/700/hand-drawn?bg=63C8D9&i=e19d85b3c47d863c9a84aadff101fec7";
 
 export function AnnouncementCard({data, announcementUserId}: Props){
 	const { user } = useAuth();
@@ -27,6 +30,14 @@ export function AnnouncementCard({data, announcementUserId}: Props){
 		}
 	}
 
+	function getPhotos(photos: string[]){
+		const uris = photos.filter(photo => photo.match(/(jpg|png)/g));
+		if(uris.length) {
+			return getAnnouncementPhotosUrl(uris)[0];
+		}
+		return DEFAULT_PHOTO
+	}
+
 	return(
 		<VStack mt={4}>
 			<Box position={'relative'} w={165} h={120} bgColor={'gray.500'} rounded={6}
@@ -34,12 +45,13 @@ export function AnnouncementCard({data, announcementUserId}: Props){
 				<Pressable onPress={handleDetailsAnnouncement}>
 					<Image 
 						source={{
-							uri: photos.length > 0 ? photos[0] : 'https://doodleipsum.com/700/hand-drawn?i=f1e89bf777357d4ac29c8ecbde156bb1'
+							uri: getPhotos(photos)
 						}}
-						alt='tenis vermelho'
+						alt={title}
 						opacity={isEnabled ? 100 : 40}
-						resizeMode='contain'
+						resizeMode='cover'
 						size={'full'}
+						rounded={6}
 					/>
 				</Pressable>
 				<Box 

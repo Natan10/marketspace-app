@@ -4,6 +4,7 @@ import { Avatar, HStack, VStack, Text, Badge, Heading } from 'native-base';
 import { ImageSlider } from './ImageSlider';
 import { PaymentMethodLabels } from './PaymentMethodLabels';
 import { PaymentMethodsDTO } from '@dtos/PaymentMethodsDTO';
+import { getAnnouncementPhotosUrl, getAvatarUrl } from '@helpers/getURIs';
 
 interface Props {
 	userPhoto: string;
@@ -13,22 +14,31 @@ interface Props {
 	price: number;
 	description: string;
 	isExchangeable: boolean;
+	isActive?: boolean;
 	photos: string[];
 	paymentMethods: PaymentMethodsDTO;
 }
 
 export function AnnouncementData({
-	userPhoto, userName, isNew, title, price, description, isExchangeable, photos, paymentMethods
+	userPhoto, 
+	userName, 
+	isNew,
+	title,
+	price,
+	description,
+	isExchangeable,
+	photos,
+	paymentMethods,
+	isActive = true
 }: Props){
-
 	return(
 		<VStack>
-			<ImageSlider photos={photos} />
+			<ImageSlider photos={getAnnouncementPhotosUrl(photos)} />
 			<VStack px={6}>
 				<HStack mt={5} space={2} alignItems={'center'}>
 					<Avatar
 						source={{
-							uri: userPhoto ? userPhoto : 'https://doodleipsum.com/700/avatar?i=5492b36b36fd72e8c51c8340deea025d'
+							uri: getAvatarUrl(userPhoto)
 						}} 
 						_image={{
 							resizeMode: 'cover'

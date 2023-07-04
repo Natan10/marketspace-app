@@ -53,8 +53,9 @@ export function Home(){
 			const {data} = await api.get(`/announcements?userId=${userId}`) as any;
 			const count = data.data.reduce((v: number, a: Announcement) => {
 				if(a.is_active) {
-					return v++;
+					v++;
 				}
+				return v;
 			},0);
 			setMyActiveAnnouncements(count);
 		} catch (error) {
@@ -109,7 +110,7 @@ export function Home(){
 					<HStack space={3} alignItems={'center'}>
 						<Image 
 							source={{
-								uri: user && user.photo ? getAvatarUrl(user) : 'https://doodleipsum.com/700/avatar?i=a69d4814c4fc0154cc80b9d158fe6b1f'
+								uri: user && user.photo ? getAvatarUrl(user.photo) : 'https://doodleipsum.com/700/avatar?i=a69d4814c4fc0154cc80b9d158fe6b1f'
 							}}
 							alt='avatar'
 							resizeMode='cover'

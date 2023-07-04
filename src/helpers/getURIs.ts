@@ -1,15 +1,13 @@
-import { Announcement } from "@dtos/AnnoucementDTO";
-import { UserDTO } from "@dtos/UserDTO";
 import { staticURI } from "@services/api";
 
-export function getAvatarUrl(user: UserDTO){
-	return `${staticURI}/assets/avatars/${user.photo}`
+export function getAvatarUrl(userImage: string){
+	return `${staticURI}/assets/avatars/${userImage}`
 }
 
-export function getAnnouncementPhotosUrl(announcement: Announcement){
+export function getAnnouncementPhotosUrl(images: string[]){
 	const uris: string[] = [];
 
-	announcement.images.forEach(image => {
+	images.forEach(image => {
 		const uri = `${staticURI}/assets/products/${image}`;
 		uris.push(uri);
 	});
