@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Button, HStack, Pressable, ScrollView, VStack, Text, useTheme } from 'native-base';
+import { Button, HStack, Pressable, ScrollView, VStack, Text, useTheme, useToast } from 'native-base';
 import { ArrowLeft, PencilSimpleLine, Power, Trash } from 'phosphor-react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Platform, SafeAreaView } from 'react-native';
+
 import { AnnouncementData } from '@components/AnnouncementData';
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 import { api } from '@services/api';
 import { useAuth } from '@contexts/AuthProvider';
 import { Announcement } from '@dtos/AnnoucementDTO';
 import { LoadRoot } from '@components/Load';
+import { HomeNavigatorRouteProps } from '@routes/home.routes';
 
 export function PublishAnnouncement(){
-	const navigator = useNavigation<AuthNavigatorRouteProps>();
+	const navigator = useNavigation<AuthNavigatorRouteProps & HomeNavigatorRouteProps>();
 	const theme = useTheme();
+	const toast = useToast();
 	const { user } = useAuth();
 	const {params} = useRoute() as any;
 
@@ -32,6 +35,23 @@ export function PublishAnnouncement(){
 			setData(data.data);
 		} catch (error) {
 			console.error(error);
+		} finally {
+			setIsLoading(false);
+		}
+	}
+
+	async function handleDeleteAnnouncement(){
+		setIsLoading(true);
+		try {
+			await api.delete(`/announcements/${params.announcementId}`);
+			navigator.navigate('myAnnouncements');
+		} catch (error) {
+			console.error(error);
+			toast.show({
+				title: 'Erro ao excluir anúncio',
+				placement: 'top',
+				bgColor: 'red.500'
+			})
 		} finally {
 			setIsLoading(false);
 		}
@@ -87,7 +107,7 @@ export function PublishAnnouncement(){
 								<Text fontFamily={'body'} color={'gray.700'}>{!data?.is_active ? 'Reativar' : 'Desativar'} anúncio</Text>
 							</HStack>
 						</Button>
-						<Button bgColor={'gray.500'} p={3} rounded={6}>
+						<Button onPress={handleDeleteAnnouncement} bgColor={'gray.500'} p={3} rounded={6}>
 							<HStack alignItems={'center'} space={2}>
 								<Trash size={16} color={theme.colors.gray[300]} />
 								<Text fontFamily={'body'} color={'gray.200'}>Excluir anúncio</Text>

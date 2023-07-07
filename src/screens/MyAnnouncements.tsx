@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Platform, SafeAreaView } from "react-native";
 import { Center, Heading, View, useTheme, Text, Select, HStack, VStack, Pressable, useToast } from "native-base";
@@ -42,7 +42,7 @@ export function MyAnnouncements(){
 		}
 	}
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		loadAnnouncementsByUser();
 	}, []);
 
