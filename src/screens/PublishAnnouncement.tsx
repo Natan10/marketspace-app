@@ -39,6 +39,26 @@ export function PublishAnnouncement(){
 			setIsLoading(false);
 		}
 	}
+	async function handleUpdateState(){
+		setIsLoading(true);
+		try {
+			if(!data){
+				return;
+			}
+			const payload: Announcement = {
+				...data,
+				is_active: !data?.is_active
+			}	
+
+			await api.put(`/announcements/${params.announcementId}`, {
+				...payload
+			});
+
+			await loadAnnouncementData();
+		} catch (error) {
+			console.error(error);
+		}
+	}
 
 	async function handleDeleteAnnouncement(){
 		setIsLoading(true);
@@ -101,6 +121,7 @@ export function PublishAnnouncement(){
 							bgColor={!data?.is_active ? 'blue.400':'gray.100'} 
 							p={3} 
 							rounded={6}
+							onPress={handleUpdateState}
 						>
 							<HStack alignItems={'center'} space={2}>
 								<Power size={16} color={theme.colors.gray[600]} />

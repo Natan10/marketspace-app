@@ -24,7 +24,8 @@ export function AnnouncementContainer({ data }: Props){
 						photos: item.images,
 						isNew: item.is_new,
 						price: item.price,
-						title: item.title
+						title: item.title,
+						isEnabled: item.is_active
 					}} 
 					announcementUserId={String(item.user_id)}
 				/>

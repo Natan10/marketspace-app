@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Platform, SafeAreaView } from "react-native";
 import { Center, Heading, View, useTheme, Text, Select, HStack, VStack, Pressable, useToast } from "native-base";
@@ -12,6 +12,7 @@ import { Announcement } from "@dtos/AnnoucementDTO";
 import { api } from "@services/api";
 import { LoadRoot } from "@components/Load";
 
+type FilterType = 'all'|'used'|'new';
 export function MyAnnouncements(){
 	const theme = useTheme();
 	const toast = useToast();
@@ -19,6 +20,7 @@ export function MyAnnouncements(){
 	const navigator = useNavigation<AuthNavigatorRouteProps>();
 
 	const [isLoading, setIsLoading] = useState(false);
+	const [filterType, setFilterType] = useState<FilterType>('all');
 	const [userAnnouncements, setUserAnnouncements] = useState<Announcement[]>([]);
 
 	function handleNavigateToCreateNewAnnouncement(){
@@ -28,7 +30,11 @@ export function MyAnnouncements(){
 	async function loadAnnouncementsByUser() {
 		setIsLoading(true);
 		try {
-			const {data} = await api.get(`/announcements?userId=${user?.id}`);
+			const {data} = await api.get(`/users/${user?.id}/announcements`, {
+				params: {
+					type: filterType === 'all' ? undefined : filterType 
+				}
+			});
 			setUserAnnouncements(data.data);
 		} catch(error) {
 			console.error(error);
@@ -42,9 +48,9 @@ export function MyAnnouncements(){
 		}
 	}
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		loadAnnouncementsByUser();
-	}, []);
+	}, [filterType]);
 
 	return (
 		<SafeAreaView 
@@ -72,8 +78,9 @@ export function MyAnnouncements(){
 						}}
 						minW={32}
 						minH={8}
-						selectedValue="all"
+						selectedValue={filterType}
 						dropdownIcon={<CaretDown style={{marginRight: 12}} size={16}/>}
+						onValueChange={item => setFilterType(item as FilterType)}
 					>
 						<Select.Item label="Todos" value="all" />
 						<Select.Item label="Novo" value="new" />

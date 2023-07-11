@@ -50,14 +50,8 @@ export function Home(){
 	async function myActiveAnnouncementsCount() {
 		try {
 			const userId = user?.id;
-			const {data} = await api.get(`/announcements?userId=${userId}`) as any;
-			const count = data.data.reduce((v: number, a: Announcement) => {
-				if(a.is_active) {
-					v++;
-				}
-				return v;
-			},0);
-			setMyActiveAnnouncements(count);
+			const {data} = await api.get(`users/${userId}/announcements?type=active`) as any;
+			setMyActiveAnnouncements(data.data.length);
 		} catch (error) {
 			console.error(error);
 			toast.show({

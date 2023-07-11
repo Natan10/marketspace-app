@@ -31,6 +31,7 @@ export function AnnouncementData({
 	paymentMethods,
 	isActive = true
 }: Props){
+
 	return(
 		<VStack>
 			<ImageSlider photos={getAnnouncementPhotosUrl(photos)} />
