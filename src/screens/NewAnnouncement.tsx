@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { 
 	Center,
 	Heading,
@@ -13,7 +13,7 @@ import {
 	Switch,
 	Checkbox, 
 } from "native-base";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { ArrowLeft } from "phosphor-react-native";
 import { useForm, Controller } from "react-hook-form";
 import * as ImagePicker from 'expo-image-picker';
@@ -26,6 +26,10 @@ import { Input } from "@components/Input";
 import { TextArea } from "@components/TextArea";
 import { AuthNavigatorRouteProps } from "@routes/auth.routes";
 import { usePreviewContext } from "@contexts/PreviewProvider";
+import { api } from "@services/api";
+import { useAuth } from "@contexts/AuthProvider";
+import { Announcement } from "@dtos/AnnoucementDTO";
+import { LoadRoot } from "@components/Load";
 
 const schema = z.object({
 	title: z.string({
@@ -41,13 +45,16 @@ const schema = z.object({
 type FormProps = z.infer<typeof schema>;
 
 export function NewAnnouncement(){
-	const { control, handleSubmit, formState: {errors} } = useForm<FormProps>({
+	const { control, handleSubmit, formState: {errors}, setValue } = useForm<FormProps>({
 		resolver: zodResolver(schema)
 	});
+	const {user} = useAuth();
 	const theme = useTheme();
 	const navigator = useNavigation<AuthNavigatorRouteProps>();
-	const { setPreviewData } = usePreviewContext()
+	const { params } = useRoute() as any;
+	const { setPreviewData } = usePreviewContext();
 
+	const [isLoading, setIsLoading] = useState(false);
 	const [photos, setPhotos] = useState<string[]>([]);
 	
 	async function handleCreateNewAnnouncement(data: FormProps){
@@ -58,10 +65,10 @@ export function NewAnnouncement(){
 			isNew: data.isNew === 'new' ? true : false,
 			price: +data.price,
 			images: photos,
-			paymentMethods: data.paymentMethods
+			paymentMethods: data.paymentMethods,
+			announcementId: params &&  params.announcementId
 		});
-
-		navigator.navigate('previewAnnouncement')
+		navigator.navigate('previewAnnouncement');
 	}
 
 	async function uploadImages(){
@@ -84,7 +91,37 @@ export function NewAnnouncement(){
 		setPhotos([...data])
 	}
 
-	return(
+	async function loadEditAnnouncementInformation(announcementId: string){
+		try {
+			const {data} = await api.get(`/announcements/${announcementId}?userId=${user?.id}`);
+			const payload = data.data as Announcement;
+
+			const paymentMethods = Object.entries(payload.payment_methods).filter(([_,v]) => v === true).map(([k, _]) => k)
+			
+			setValue('title', payload.title);
+			setValue('description', payload.description);
+			setValue('isNew', payload.is_new ? 'new' : 'old');
+			setValue('isExchangeable', payload.is_exchangeable);
+			setValue('price', String(payload.price));
+			setValue('paymentMethods', paymentMethods);
+
+			setPhotos(payload.images);
+		}catch(err) {
+			console.error(err);
+		}
+	}
+
+	useEffect(() => {
+		// edit		
+		(async() => {
+			setIsLoading(true);
+			if(params && params.announcementId) {
+				await loadEditAnnouncementInformation(params.announcementId)
+			}
+			setIsLoading(false);
+		})();
+	}, []);
+	return isLoading ? <LoadRoot.Screen /> : (
 		<VStack flex={1} bgColor={'gray.600'} pt={8}>
 			<ScrollView showsVerticalScrollIndicator={false}>
 				<VStack px={6} pb={8} pt={6}>
@@ -92,7 +129,7 @@ export function NewAnnouncement(){
 						<Pressable onPress={() => navigator.goBack()} position={'absolute'} left={0}>
 							<ArrowLeft size={24} weight="bold" color={theme.colors.gray[200]} />
 						</Pressable>
-						<Heading color="gray.100" fontFamily="body" fontSize={20}>Criar anúncio</Heading>
+						<Heading color="gray.100" fontFamily="body" fontSize={20}>{params && params.announcementId ? 'Editar' : 'Novo'} anúncio</Heading>
 					</Center>
 
 					<VStack mt={6}>
@@ -181,8 +218,14 @@ export function NewAnnouncement(){
 						<Controller 
 							control={control}
 							name="isNew"
-							render={({ field: { onChange } }) => (
-								<Radio.Group colorScheme={'blue'} onChange={onChange} name="product type"  accessibilityLabel="product type">
+							render={({ field: { onChange, value } }) => (
+								<Radio.Group 
+									colorScheme={'blue'} 
+									onChange={onChange} 
+									name="product type"  
+									accessibilityLabel="product type"
+									value={value}
+								>
 									<HStack w={"full"} space={5}>
 										<Radio value={'new'}>
 											<Text color={'gray.200'} fontSize={16} fontFamily={'heading'}>
@@ -225,11 +268,12 @@ export function NewAnnouncement(){
 						<Controller 
 							control={control}
 							name="isExchangeable"
-							render={({field: {onChange}}) => (
+							render={({field: {onChange, value}}) => (
 								<Switch 
 									size="sm"
 									onTrackColor="blue.400" 
 									onValueChange={onChange}
+									value={value}
 								/>
 							)}
 						/>
@@ -243,8 +287,8 @@ export function NewAnnouncement(){
 						<Controller 
 							control={control}
 							name="paymentMethods"
-							render={({field: {onChange}}) => (
-								<Checkbox.Group onChange={onChange} mt={3}>
+							render={({field: {onChange, value}}) => (
+								<Checkbox.Group onChange={onChange} mt={3} value={value}>
 									<Checkbox borderWidth={1} mb={2} 
 										_checked={{
 										bgColor: 'blue.400',

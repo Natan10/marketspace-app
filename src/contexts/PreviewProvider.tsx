@@ -1,9 +1,13 @@
 import React,{ ReactNode, createContext, useContext, useState } from 'react';
 import { AnnouncementPreviewDTO } from '@dtos/AnnoucementDTO';
 
+type PreviewDataDTO = AnnouncementPreviewDTO & {
+	announcementId?: string;
+}
+
 interface PreviewContextProps {
-	previewData: AnnouncementPreviewDTO;
-	setPreviewData: (data: AnnouncementPreviewDTO) => void;
+	previewData: PreviewDataDTO;
+	setPreviewData: (data: PreviewDataDTO) => void;
 }
 
 const PreviewContext = createContext<PreviewContextProps>({} as PreviewContextProps);
@@ -13,7 +17,7 @@ interface PreviewProviderProps {
 }
 
 export function PreviewProvider({ children }: PreviewProviderProps){
-	const [previewData, setPreviewData] = useState({} as AnnouncementPreviewDTO);
+	const [previewData, setPreviewData] = useState({} as PreviewDataDTO);
 
 	return(
 		<PreviewContext.Provider value={{previewData, setPreviewData}}>

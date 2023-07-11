@@ -26,7 +26,8 @@ export function PublishAnnouncement(){
 	const bgColor = theme.colors.gray[600];
 
 	function handleEdit(){
-		navigator.navigate('newAnnouncement')
+		const announcementId = data ? String(data.id) : ''
+		navigator.navigate('newAnnouncement', {announcementId})
 	}
 
 	async function loadAnnouncementData(){

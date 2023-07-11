@@ -9,7 +9,7 @@ import { PublishAnnouncement } from '@screens/PublishAnnouncement';
 
 type AuthRoutesParams = {
 	homeRoutes: undefined;
-	newAnnouncement: undefined;
+	newAnnouncement: undefined | { announcementId: string};
 	detailAnnouncement: {announcementId: string, userId: string};
 	publishAnnouncement: {announcementId: string};
 	previewAnnouncement: undefined;

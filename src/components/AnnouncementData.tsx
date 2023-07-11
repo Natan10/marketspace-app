@@ -19,6 +19,8 @@ interface Props {
 	paymentMethods: PaymentMethodsDTO;
 }
 
+const DEFAULT_AVATAR = 'https://doodleipsum.com/700/avatar?i=2b56fb33ea5f14f9b1d14f63fd748f81';
+
 export function AnnouncementData({
 	userPhoto, 
 	userName, 
@@ -31,7 +33,6 @@ export function AnnouncementData({
 	paymentMethods,
 	isActive = true
 }: Props){
-
 	return(
 		<VStack>
 			<ImageSlider photos={getAnnouncementPhotosUrl(photos)} />
@@ -39,7 +40,7 @@ export function AnnouncementData({
 				<HStack mt={5} space={2} alignItems={'center'}>
 					<Avatar
 						source={{
-							uri: getAvatarUrl(userPhoto)
+							uri: userPhoto ? getAvatarUrl(userPhoto) : DEFAULT_AVATAR
 						}} 
 						_image={{
 							resizeMode: 'cover'

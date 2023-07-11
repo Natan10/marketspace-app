@@ -43,6 +43,7 @@ export function PreviewAnnouncement(){
 
 	async function handleCreate(){
 		setIsLoading(true);
+		const announcementEditedId = previewData.announcementId;
 		try {
 			const { images } = previewData;
 			const fileNames: string[] = [];
@@ -68,7 +69,7 @@ export function PreviewAnnouncement(){
 				});
 			} 
 
-			await api.post('/announcements', {
+			const payload = {
 				title: previewData.title,
 				description: previewData.description,
 				is_new: previewData.isNew,
@@ -78,10 +79,20 @@ export function PreviewAnnouncement(){
 				images : fileNames,
 				user_id: Number(user!.id),
 				paymentMethods: labels, 
-			});
+			}
+
+			if(announcementEditedId) {
+				await api.put(`/announcements/${announcementEditedId}`, {
+					...payload,
+				});
+			}else {
+				await api.post('/announcements', {
+					...payload
+				});
+			}
 
 			toast.show({
-				title: 'Anúncio criado com sucesso',
+				title: announcementEditedId ? 'Anúncio atualizado com sucesso' : 'Anúncio criado com sucesso',
 				backgroundColor: 'green.400',
 				placement: 'top'
 			});
@@ -90,7 +101,7 @@ export function PreviewAnnouncement(){
 		} catch (error) {
 			console.error(error);
 			toast.show({
-				title: 'Erro ao criar anúncio, tente novamente.',
+				title: announcementEditedId ? 'Erro ao atualizar anúncio' : 'Erro ao criar anúncio, tente novamente.',
 				backgroundColor: 'red.400',
 				placement: 'top'
 			});
