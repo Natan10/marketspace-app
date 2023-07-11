@@ -121,6 +121,7 @@ export function NewAnnouncement(){
 			setIsLoading(false);
 		})();
 	}, []);
+
 	return isLoading ? <LoadRoot.Screen /> : (
 		<VStack flex={1} bgColor={'gray.600'} pt={8}>
 			<ScrollView showsVerticalScrollIndicator={false}>

@@ -18,9 +18,7 @@ import { AnnouncementContainer } from '@components/AnnouncementContainer';
 import { useAuth } from '@contexts/AuthProvider';
 import { Announcement } from '@dtos/AnnoucementDTO';
 import { Button as ButtonComposition } from '@components/Button';
-
-import { api, staticURI } from '@services/api';
-
+import { api } from '@services/api';
 import { HomeNavigatorRouteProps } from '@routes/home.routes';
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 import { LoadRoot } from '@components/Load';
@@ -28,11 +26,11 @@ import { FilterModal } from '@components/FilterModal';
 import { getAvatarUrl } from '@helpers/getURIs';
 
 export function Home(){
-	const [isVisibleFilter, setIsVisibleFilter] = useState(false);
 	const theme = useTheme();
 	const toast = useToast();
 	const { user } = useAuth();
-
+	
+	const [isVisibleFilter, setIsVisibleFilter] = useState(false);
 	const [isLoadingData, setIsLoadingData] = useState(true);
 	const [announcements, setAnnouncements] = useState<Announcement[]>([]);
 	const [myActiveAnnouncements, setMyActiveAnnouncements] = useState(0);

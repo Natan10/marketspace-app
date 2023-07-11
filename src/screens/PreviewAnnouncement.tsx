@@ -39,7 +39,7 @@ export function PreviewAnnouncement(){
 		return p;
 	}, paymentMethodsMapper);
 
-	const userPhoto = user ? `${staticURI}/photos/${user.photo}` : ''
+	const userPhoto = user && user.photo ? `${staticURI}/photos/${user.photo}` : ''
 
 	async function handleCreate(){
 		setIsLoading(true);
@@ -134,6 +134,7 @@ export function PreviewAnnouncement(){
 						paymentMethods={labels}
 						userName={user?.username || ''}
 						userPhoto={userPhoto}
+						isEdit={!!previewData.announcementId ? true : false}
 					/>			
 				</View>
 			</ScrollView>

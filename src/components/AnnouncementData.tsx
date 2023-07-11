@@ -17,6 +17,7 @@ interface Props {
 	isActive?: boolean;
 	photos: string[];
 	paymentMethods: PaymentMethodsDTO;
+	isEdit: boolean;
 }
 
 const DEFAULT_AVATAR = 'https://doodleipsum.com/700/avatar?i=2b56fb33ea5f14f9b1d14f63fd748f81';
@@ -31,11 +32,13 @@ export function AnnouncementData({
 	isExchangeable,
 	photos,
 	paymentMethods,
-	isActive = true
+	isActive = true,
+	isEdit = false,
 }: Props){
+
 	return(
 		<VStack>
-			<ImageSlider photos={getAnnouncementPhotosUrl(photos)} />
+			<ImageSlider photos={isEdit ? getAnnouncementPhotosUrl(photos) : photos} />
 			<VStack px={6}>
 				<HStack mt={5} space={2} alignItems={'center'}>
 					<Avatar

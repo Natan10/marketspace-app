@@ -114,6 +114,7 @@ export function PublishAnnouncement(){
 							isActive={data.is_active}
 							userName={user?.username || ''}
 							userPhoto={user?.photo || ''}
+							isEdit={true}
 						/>
 					)}
 
