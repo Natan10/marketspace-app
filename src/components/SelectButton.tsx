@@ -1,20 +1,21 @@
 import React from 'react';
-import { HStack, Pressable, Text } from 'native-base';
+import { HStack, Pressable, Radio, Text } from 'native-base';
 import { XCircle } from 'phosphor-react-native';
 
 interface Props {
-	// onSelect: () => void;
+	onSelect: () => void;
 	title: string;
 	isSelected?: boolean;
 }
 
-export function SelectButton({ title, isSelected = false }: Props){
+export function SelectButton({ title, isSelected = false, onSelect}: Props){
 	return(
 		<Pressable 
 			borderRadius={'full'} 
 			bgColor={isSelected ? 'blue.400': 'gray.500'}
 			w={20}
 			p={1.5}
+			onPress={onSelect}
 		>
 			<HStack justifyContent={'center'} alignItems={'center'} space={1.5}>
 				<Text 

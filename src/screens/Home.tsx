@@ -73,6 +73,30 @@ export function Home(){
 			});
 		}
 	}
+
+	async function handleGetAnnouyncementByFilter(params: {
+		isNew: boolean;
+		isExchangeable: boolean;
+		paymentMethods: string[];
+	}){
+		setIsLoadingData(true);
+		try {
+			const convertParams = params.paymentMethods.join(',');
+			const {data} = await api.get('/announcements', {
+				params: {
+					is_new: params.isNew,
+					is_exchangeable: params.isExchangeable,
+					paymentMethods: convertParams
+				}
+			});
+
+			setAnnouncements(data.data);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setIsLoadingData(false);
+		}
+	}
 	
 	useFocusEffect(useCallback(() => {
 		(async function(){
@@ -196,6 +220,7 @@ export function Home(){
 				<FilterModal 
 					isVisible={isVisibleFilter}
 					setIsVisible={setIsVisibleFilter}
+					onSendFilterParams={handleGetAnnouyncementByFilter}
 				/>
 			</VStack>
 		</SafeAreaView>

@@ -1,17 +1,54 @@
-import { Box, Text, Center, Checkbox, HStack, Heading, Pressable, Switch, VStack, View, useTheme } from "native-base";
+import { Box, Text, Center, Checkbox, HStack, Heading, Pressable, Switch, VStack, View, useTheme, Radio } from "native-base";
 import { X } from "phosphor-react-native";
 import { Modal } from "react-native";
+import { useForm, Controller } from "react-hook-form";
 
 import { SelectButton } from "./SelectButton";
 import { Button as ButtonComposition } from './Button'
 
+type FormDataProps = {
+	isNew: string;
+	isExchangeable: boolean;
+	paymentMethods: string[];
+}
+
 interface Props {
 	isVisible: boolean;
 	setIsVisible: (data: boolean) => void;
+	onSendFilterParams: (data: {
+		isNew: boolean
+		isExchangeable: boolean
+		paymentMethods: string[]
+	}) => Promise<void>;
 }
 
-export function FilterModal({isVisible, setIsVisible}: Props){
+export function FilterModal({isVisible, setIsVisible, onSendFilterParams}: Props){
+	const {control, handleSubmit, setValue, watch, reset} = useForm<FormDataProps>({
+		defaultValues: {
+			isNew: 'new',
+			isExchangeable: false,
+			paymentMethods: []
+		}
+	});
 	const theme = useTheme();
+
+	const isNewField = watch('isNew');
+
+	async function getFilterParams(data: FormDataProps){
+		await onSendFilterParams({
+			isNew: data.isNew === 'new' ? true: false,
+			isExchangeable: data.isExchangeable,
+			paymentMethods: data.paymentMethods
+		});
+	}
+
+	function resetFilterParams(){
+		reset({
+			paymentMethods: [],
+			isNew: 'new',
+			isExchangeable: false
+		})
+	}
 
 	return(
 		<Modal
@@ -36,16 +73,32 @@ export function FilterModal({isVisible, setIsVisible}: Props){
 						<View mb={4}>
 							<Text color={'gray.200'} fontSize={14} bold>Condição</Text>
 							<HStack alignItems={'center'} space={3} mt={3}>
-								<SelectButton isSelected title='novo' />
-								<SelectButton title='usado' />
+								<SelectButton 
+									title='novo'
+									isSelected={isNewField === 'new'}
+									onSelect={() => setValue('isNew', 'new')} 
+								/>
+								<SelectButton 
+									title='usado' 
+									onSelect={() => setValue('isNew', 'old')}
+									isSelected={isNewField === 'old'}
+								/>
 							</HStack>
 						</View>
 
 						<HStack mb={4} alignItems={'center'} space={2}>
 							<Text color={'gray.200'} fontSize={14} bold>Aceita troca?</Text>
-							<Switch 
-								size="sm"
-								onTrackColor="blue.400" 
+							<Controller 
+								control={control}
+								name="isExchangeable"
+								render={({field: {value, onChange}}) => (
+									<Switch 
+										size="sm"
+										onTrackColor="blue.400" 
+										onToggle={onChange}
+										value={value}
+									/>
+								)}
 							/>
 						</HStack>
 
@@ -53,88 +106,93 @@ export function FilterModal({isVisible, setIsVisible}: Props){
 							<Text color={'gray.200'} fontSize={14} bold>
 								Meios de pagamento aceitos
 							</Text>
-
-							<Checkbox.Group mt={3}>
-								<Checkbox borderWidth={1} mb={2} 
-									_checked={{
-									bgColor: 'blue.400',
-									borderColor: 'blue.400'
-								}} 
-								_text={{
-									fontSize: 16,
-									color: 'gray.200',
-									fontFamily: 'heading',
-								}}
-								value='Teste'>
-									Boleto
-								</Checkbox>
-								<Checkbox borderWidth={1} mb={2} 
-									_checked={{
-									bgColor: 'blue.400',
-									borderColor: 'blue.400'
-								}} 
-								_text={{
-									fontSize: 16,
-									color: 'gray.200',
-									fontFamily: 'heading',
-								}}
-								value='Teste'>
-									Pix
-								</Checkbox>
-								<Checkbox borderWidth={1} mb={2} 
-									_checked={{
-									bgColor: 'blue.400',
-									borderColor: 'blue.400'
-								}} 
-								_text={{
-									fontSize: 16,
-									color: 'gray.200',
-									fontFamily: 'heading',
-								}}
-								value='Teste'>
-									Dinheiro
-								</Checkbox>
-								<Checkbox borderWidth={1} mb={2} 
-									_checked={{
-									bgColor: 'blue.400',
-									borderColor: 'blue.400'
-								}} 
-								_text={{
-									fontSize: 16,
-									color: 'gray.200',
-									fontFamily: 'heading',
-								}}
-								value='Teste'>
-									Cartão de Crédito
-								</Checkbox>
-								<Checkbox borderWidth={1} mb={2} 
-									_checked={{
-									bgColor: 'blue.400',
-									borderColor: 'blue.400'
-								}} 
-								_text={{
-									fontSize: 16,
-									color: 'gray.200',
-									fontFamily: 'heading',
-								}}
-								value='Teste'>
-									Cartão de Débito
-								</Checkbox>
-								<Checkbox borderWidth={1} 
-									_checked={{
-									bgColor: 'blue.400',
-									borderColor: 'blue.400'
-								}} 
-								_text={{
-									fontSize: 16,
-									color: 'gray.200',
-									fontFamily: 'heading',
-								}}
-								value='Teste'>
-									Depósito Bancário
-								</Checkbox>
-
-							</Checkbox.Group>
+							
+							<Controller 
+								control={control}
+								name="paymentMethods"
+								render={({field: {onChange, value}}) => (
+									<Checkbox.Group mt={3} onChange={onChange} value={value}>
+										<Checkbox borderWidth={1} mb={2} 
+										_checked={{
+										bgColor: 'blue.400',
+										borderColor: 'blue.400'
+									}} 
+									_text={{
+										fontSize: 16,
+										color: 'gray.200',
+										fontFamily: 'heading',
+									}}
+									value='boleto'>
+										Boleto
+										</Checkbox>
+										<Checkbox borderWidth={1} mb={2} 
+											_checked={{
+											bgColor: 'blue.400',
+											borderColor: 'blue.400'
+										}} 
+										_text={{
+											fontSize: 16,
+											color: 'gray.200',
+											fontFamily: 'heading',
+										}}
+										value='pix'>
+											Pix
+										</Checkbox>
+										<Checkbox borderWidth={1} mb={2} 
+											_checked={{
+											bgColor: 'blue.400',
+											borderColor: 'blue.400'
+										}} 
+										_text={{
+											fontSize: 16,
+											color: 'gray.200',
+											fontFamily: 'heading',
+										}}
+										value='cash'>
+											Dinheiro
+										</Checkbox>
+										<Checkbox borderWidth={1} mb={2} 
+											_checked={{
+											bgColor: 'blue.400',
+											borderColor: 'blue.400'
+										}} 
+										_text={{
+											fontSize: 16,
+											color: 'gray.200',
+											fontFamily: 'heading',
+										}}
+										value='credit_card'>
+											Cartão de Crédito
+										</Checkbox>
+										<Checkbox borderWidth={1} mb={2} 
+											_checked={{
+											bgColor: 'blue.400',
+											borderColor: 'blue.400'
+										}} 
+										_text={{
+											fontSize: 16,
+											color: 'gray.200',
+											fontFamily: 'heading',
+										}}
+										value='debit_card'>
+											Cartão de Débito
+										</Checkbox>
+										<Checkbox borderWidth={1} 
+											_checked={{
+											bgColor: 'blue.400',
+											borderColor: 'blue.400'
+										}} 
+										_text={{
+											fontSize: 16,
+											color: 'gray.200',
+											fontFamily: 'heading',
+										}}
+										value='bank_deposit'>
+											Depósito Bancário
+										</Checkbox>
+									</Checkbox.Group>
+								)}
+							/>
 						</View>
 					</VStack>
 
@@ -142,6 +200,7 @@ export function FilterModal({isVisible, setIsVisible}: Props){
 						<ButtonComposition.Root
 							bgColor={'gray.500'}
 							flex={1}
+							onPress={resetFilterParams}
 						>
 							<ButtonComposition.TitleBold
 								color={'gray.200'}
@@ -153,6 +212,7 @@ export function FilterModal({isVisible, setIsVisible}: Props){
 						<ButtonComposition.Root
 							bgColor={'gray.200'}
 							flex={1}
+							onPress={handleSubmit(getFilterParams)}
 						>
 							<ButtonComposition.TitleBold
 								color={'gray.700'}
