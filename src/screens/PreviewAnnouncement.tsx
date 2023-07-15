@@ -8,12 +8,13 @@ import { v4 } from 'uuid';
 
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 import { Button as ButtonComposition } from '@components/Button';
-import { AnnouncementData } from '@components/AnnouncementData';
 import { LoadRoot } from '@components/Load';
 import { usePreviewContext } from '@contexts/PreviewProvider';
 import { useAuth } from '@contexts/AuthProvider';
 import { PaymentMethodsDTO } from '@dtos/PaymentMethodsDTO';
-import { api, staticURI } from '@services/api';
+import { api } from '@services/api';
+import { AnnouncementComponent } from '@components/AnnouncementInfo';
+import { getAvatarUrl } from '@helpers/getURIs';
 
 const paymentMethodsMapper: PaymentMethodsDTO = {
 	pix: false,
@@ -22,6 +23,8 @@ const paymentMethodsMapper: PaymentMethodsDTO = {
 	cash: false,
 	credit_card: false
 } 
+
+const DEFAULT_AVATAR = 'https://doodleipsum.com/700/avatar?i=15386952c2b850ce51ed8166590f17d1';
 
 export function PreviewAnnouncement(){
 	const theme = useTheme();
@@ -38,8 +41,6 @@ export function PreviewAnnouncement(){
 		}
 		return p;
 	}, paymentMethodsMapper);
-
-	const userPhoto = user && user.photo ? `${staticURI}/photos/${user.photo}` : ''
 
 	async function handleCreate(){
 		setIsLoading(true);
@@ -124,18 +125,27 @@ export function PreviewAnnouncement(){
 				</Center>
 
 				<View pb={6}>
-					<AnnouncementData 
-						description={previewData.description}
-						title={previewData.title}
-						isExchangeable={previewData.isExchangeable}
-						isNew={previewData.isNew}
-						price={previewData.price}
-						photos={previewData.images}
-						paymentMethods={labels}
-						userName={user?.username || ''}
-						userPhoto={userPhoto}
-						isEdit={!!previewData.announcementId ? true : false}
-					/>			
+					<AnnouncementComponent.Root>
+						<AnnouncementComponent.Photos 
+							photos={
+								previewData.images
+							}
+						/>
+						<AnnouncementComponent.Container>
+							<AnnouncementComponent.Header 
+								isNew={previewData.isNew}
+								username={user?.username || ''}
+								avatar={user?.photo ? getAvatarUrl(user.photo) : DEFAULT_AVATAR}
+							/>
+							<AnnouncementComponent.Information 
+								title={previewData.title}
+								description={previewData.description}
+								price={previewData.price}
+								isExchangeable={previewData.isExchangeable}
+								paymentMethods={labels}
+							/>
+						</AnnouncementComponent.Container>
+					</AnnouncementComponent.Root>		
 				</View>
 			</ScrollView>
 

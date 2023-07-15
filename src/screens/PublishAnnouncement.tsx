@@ -4,13 +4,16 @@ import { ArrowLeft, PencilSimpleLine, Power, Trash } from 'phosphor-react-native
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Platform, SafeAreaView } from 'react-native';
 
-import { AnnouncementData } from '@components/AnnouncementData';
+import { AnnouncementComponent } from '@components/AnnouncementInfo'
 import { AuthNavigatorRouteProps } from '@routes/auth.routes';
 import { api } from '@services/api';
 import { useAuth } from '@contexts/AuthProvider';
 import { Announcement } from '@dtos/AnnoucementDTO';
 import { LoadRoot } from '@components/Load';
 import { HomeNavigatorRouteProps } from '@routes/home.routes';
+import { getAnnouncementPhotosUrl, getAvatarUrl } from '@helpers/getURIs';
+
+const DEFAULT_AVATAR = 'https://doodleipsum.com/700/avatar?i=2b56fb33ea5f14f9b1d14f63fd748f81';
 
 export function PublishAnnouncement(){
 	const navigator = useNavigation<AuthNavigatorRouteProps & HomeNavigatorRouteProps>();
@@ -103,20 +106,29 @@ export function PublishAnnouncement(){
 					</HStack>
 					
 					{data && (
-						<AnnouncementData 
-							title={data.title}
-							description={data.description}
-							isNew={data.is_new}
-							isExchangeable={data.is_exchangeable}
-							price={data.price}
-							paymentMethods={data.payment_methods}
-							photos={data.images}
-							isActive={data.is_active}
-							userName={user?.username || ''}
-							userPhoto={user?.photo || ''}
-							isEdit={true}
-						/>
+						<AnnouncementComponent.Root>
+							<AnnouncementComponent.Photos 
+								photos={
+									data.images ? getAnnouncementPhotosUrl(data.images) : []
+								}
+							/>
+							<AnnouncementComponent.Container>
+								<AnnouncementComponent.Header 
+									isNew={data?.is_new}
+									username={user?.username || ''}
+									avatar={user?.photo ? getAvatarUrl(user.photo) : DEFAULT_AVATAR}
+								/>
+								<AnnouncementComponent.Information 
+									title={data.title}
+									description={data.description}
+									price={data.price}
+									isExchangeable={data.is_exchangeable}
+									paymentMethods={data.payment_methods}
+								/>
+							</AnnouncementComponent.Container>
+						</AnnouncementComponent.Root>
 					)}
+
 
 					<VStack px={6} mt={6} space={2}>
 						<Button 
