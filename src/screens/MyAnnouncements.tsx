@@ -1,5 +1,5 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import React, { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Platform, SafeAreaView } from "react-native";
 import { Center, Heading, View, useTheme, Text, Select, HStack, VStack, Pressable, useToast } from "native-base";
 import { CaretDown, Plus } from "phosphor-react-native";
@@ -48,9 +48,9 @@ export function MyAnnouncements(){
 		}
 	}
 
-	useEffect(() => {
+	useFocusEffect(useCallback(() => {
 		loadAnnouncementsByUser();
-	}, [filterType]);
+	}, [filterType]));
 
 	return (
 		<SafeAreaView 
@@ -68,7 +68,11 @@ export function MyAnnouncements(){
 				</Center>
 
 				<HStack mb={5} mt={8} alignItems={'center'} justifyContent={'space-between'}>
-					<Text color={'gray.200'} fontSize={14} fontFamily={'heading'}>{userAnnouncements.length} anúncios</Text>
+					{isLoading ? (
+						<Text color={'gray.200'} fontSize={14} fontFamily={'heading'}>Carregando anúncios</Text>
+					):(
+						<Text color={'gray.200'} fontSize={14} fontFamily={'heading'}>{userAnnouncements.length} anúncios</Text>
+					)}
 					<Select 
 						borderRadius={6} 
 						_text={{

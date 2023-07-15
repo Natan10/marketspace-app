@@ -15,6 +15,7 @@ export function CardLoad(){
 					w={165} 
 					h={120}
 					rounded={6}
+					backgroundColor={'gray.500'}
 				/>
 			)}
 		/>

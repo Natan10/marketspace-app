@@ -7,6 +7,7 @@ export function HeadingLoad({...rest}: Props){
 		<Skeleton 
 			h={120}
 			rounded={6}
+			backgroundColor={'gray.500'}
 			{...rest}
 		/>
 	)

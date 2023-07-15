@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { 
 	HStack,
 	VStack,
@@ -11,7 +11,7 @@ import {
 } from 'native-base';
 import { Platform, SafeAreaView } from 'react-native';
 import { ArrowRight, Plus, Tag } from 'phosphor-react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 import { SearchInput } from '@components/SearchInput';
 import { AnnouncementContainer } from '@components/AnnouncementContainer';
@@ -74,7 +74,7 @@ export function Home(){
 		}
 	}
 	
-	useLayoutEffect(() => {
+	useFocusEffect(useCallback(() => {
 		(async function(){
 			try {
 				Promise.allSettled([loadAnnouncements(), myActiveAnnouncementsCount()])		
@@ -84,7 +84,7 @@ export function Home(){
 				setIsLoadingData(false);
 			}
 		})();
-	}, []);
+	},[]));
 
 	return (<SafeAreaView 
 			style={{
