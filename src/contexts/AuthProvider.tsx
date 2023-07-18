@@ -76,7 +76,7 @@ export function AuthProvider({children}: AuthProviderProps){
 		(async function(){
 			const user = await AsyncStorage.getItem('@user');
 			const token = await AsyncStorage.getItem('@token');
-
+			
 			if(user && token) {
 				api.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(token)}`;
 				const payload = JSON.parse(user);

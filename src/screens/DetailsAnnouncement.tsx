@@ -53,7 +53,20 @@ export function DetailsAnnouncement() {
 
 	async function openWhatsAppChat(){
 		if(userAnnouncementInformation.phone) {
-			Linking.openURL(`whatsapp://send?phone=${userAnnouncementInformation.phone}&text=${''}`);
+			try {
+				const hasWhatsapp = await Linking.canOpenURL("whatsapp://send?text=oi");
+				if(hasWhatsapp) {
+					return await Linking.openURL(`whatsapp://send?phone=5585986403143&text=${'Hello'}`);
+				}
+				toast.show({
+					title: 'Instale o whatsapp para continuar o processo.',
+					backgroundColor: 'blue.400',
+					placement: 'top'
+				});
+				return;
+			} catch (error) {
+				console.error(error);
+			}
 		}
 	}
 
@@ -105,6 +118,7 @@ export function DetailsAnnouncement() {
 							paymentMethods={details.payment_methods}
 							userName={userAnnouncementInformation.username}
 							userPhoto={userAnnouncementInformation.photo}
+							isEdit={false}
 						/>
 					)}
 				</VStack>				
@@ -119,6 +133,7 @@ export function DetailsAnnouncement() {
 
 				<ButtonComposition.Root
 					bgColor={'blue.400'}
+					onPress={openWhatsAppChat}
 				>
 					<ButtonComposition.Icon 
 						icon={<WhatsappLogo size={16} weight='fill' color='white'/>}
