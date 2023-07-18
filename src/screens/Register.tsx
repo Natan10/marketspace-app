@@ -127,11 +127,12 @@ export function Register(){
 						justifyContent={'center'}
 						alignItems={'center'}
 						px={12}
+						pb={12}
 						flex={1}
 						h={'full'}
 					>	
-						<Center>
-							<Image size={60} source={logo} resizeMode='cover' alt='logo marketspace' />
+						<Center my={5}>
+							<Image size={60} source={logo} resizeMode='contain' alt='logo marketspace' />
 							<Heading color='gray.100' fontSize='3xl' fontFamily='body'>
 								Boas vindas!
 							</Heading>
