@@ -13,6 +13,8 @@ export function getAnnouncementPhotosUrl(images: string[]){
 	images.forEach(image => {
 		if(image.match(/doodleipsum\.com/g)) {
 			uris.push(image);
+		}else if(image.match(/ImagePicker/g)){
+			uris.push(image);
 		}else{
 			const uri = `${staticURI}/assets/products/${image}`;
 			uris.push(uri);

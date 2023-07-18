@@ -111,6 +111,7 @@ export function PublishAnnouncement(){
 								photos={
 									data.images ? getAnnouncementPhotosUrl(data.images) : []
 								}
+								isDisabled={!data.is_active}
 							/>
 							<AnnouncementComponent.Container>
 								<AnnouncementComponent.Header 

@@ -1,11 +1,12 @@
 import { ImageSlider } from '../ImageSlider';
 
 interface Props {
-	photos: string[]
+	photos: string[];
+	isDisabled?: boolean;
 }
 
-export function AnnouncementPhotos({photos}: Props){
+export function AnnouncementPhotos({photos, isDisabled = false}: Props){
 	return(
-		<ImageSlider photos={photos} />
-	)
+		<ImageSlider photos={photos} isDisabled={isDisabled} />
+	);
 }

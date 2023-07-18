@@ -30,6 +30,7 @@ import { api } from "@services/api";
 import { useAuth } from "@contexts/AuthProvider";
 import { Announcement } from "@dtos/AnnoucementDTO";
 import { LoadRoot } from "@components/Load";
+import { getAnnouncementPhotosUrl } from "@helpers/getURIs";
 
 const schema = z.object({
 	title: z.string({
@@ -148,7 +149,7 @@ export function NewAnnouncement(){
 									{photos[0] ? (
 										<UploadImage 
 											triggerUpload={uploadImages} 
-											image={photos[0]}  
+											image={params && params.announcementId ? getAnnouncementPhotosUrl([photos[0]])[0] : photos[0]}  
 											removeUpload={() => removeUpload(0)}
 										/>
 									): (
@@ -160,7 +161,7 @@ export function NewAnnouncement(){
 									{photos[1] ? (
 										<UploadImage 
 											triggerUpload={uploadImages} 
-											image={photos[1]}  
+											image={params && params.announcementId ? getAnnouncementPhotosUrl([photos[1]])[0] : photos[1]}  
 											removeUpload={() => removeUpload(1)}
 										/>
 									): (
@@ -172,7 +173,7 @@ export function NewAnnouncement(){
 									{photos[2] ? (
 										<UploadImage 
 											triggerUpload={uploadImages} 
-											image={photos[2]}  
+											image={params && params.announcementId ? getAnnouncementPhotosUrl([photos[2]])[0] : photos[2]}  
 											removeUpload={() => removeUpload(2)}
 										/>
 									):(
