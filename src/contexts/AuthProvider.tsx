@@ -1,6 +1,7 @@
-import React,{createContext, useContext, useState} from 'react';
+import React,{createContext, useContext, useEffect, useState} from 'react';
 import jwt_decode from "jwt-decode";
 import { Spinner, View } from 'native-base';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { api } from '@services/api';
 
@@ -46,13 +47,17 @@ export function AuthProvider({children}: AuthProviderProps){
 
 			const {data: userInformation} = await api.get(`/users/${user_id}`);
 
-			setUser({
+			const payload = {
 				id: user_id,
 				email: userInformation.email, 
 				username: userInformation.username,
 				phone: userInformation.phone,
 				photo: userInformation.photo
-			});			
+			}
+
+			setUser(payload);
+			await AsyncStorage.setItem('@user', JSON.stringify(payload));
+			await AsyncStorage.setItem('@token', JSON.stringify(token));
 		} catch (error) {
 			throw error;	
 		} finally {
@@ -60,11 +65,25 @@ export function AuthProvider({children}: AuthProviderProps){
 		}
 	}
 
-	function signOut(){
-		setUser(null);
+	async function signOut(){
+		await AsyncStorage.removeItem('@user');
+		await AsyncStorage.removeItem('@token');
 		api.defaults.headers.common['Authorization'] = ``;
+		setUser(null);
 	}
-	// guardar no async storage
+
+	useEffect(() => {
+		(async function(){
+			const user = await AsyncStorage.getItem('@user');
+			const token = await AsyncStorage.getItem('@token');
+
+			if(user && token) {
+				api.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(token)}`;
+				const payload = JSON.parse(user);
+				setUser({...payload});
+			}
+		})();
+	}, []);
 
 	return(
 		<AuthContext.Provider value={{
