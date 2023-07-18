@@ -74,14 +74,17 @@ export function Home(){
 		}
 	}
 
-	async function handleGetAnnouyncementByFilter(params: {
-		isNew: boolean;
-		isExchangeable: boolean;
-		paymentMethods: string[];
+	async function handleGetAnnouncementsByFilter(params: {
+		isNew?: boolean;
+		isExchangeable?: boolean;
+		paymentMethods?: string[];
 	}){
 		setIsLoadingData(true);
+		setIsVisibleFilter(false);
 		try {
-			const convertParams = params.paymentMethods.join(',');
+			const convertParams = params.paymentMethods ? 
+				(params.paymentMethods.length > 0 ? params.paymentMethods.join(','): undefined) 
+				: undefined;
 			const {data} = await api.get('/announcements', {
 				params: {
 					is_new: params.isNew,
@@ -91,6 +94,18 @@ export function Home(){
 			});
 
 			setAnnouncements(data.data);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setIsLoadingData(false);
+		}
+	}
+
+	async function handleResetAnnouncementsFilter(){
+		setIsLoadingData(true);
+		setIsVisibleFilter(false);
+		try {
+			await loadAnnouncements();
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -220,7 +235,8 @@ export function Home(){
 				<FilterModal 
 					isVisible={isVisibleFilter}
 					setIsVisible={setIsVisibleFilter}
-					onSendFilterParams={handleGetAnnouyncementByFilter}
+					onSendFilterParams={handleGetAnnouncementsByFilter}
+					onResetFilterParams={handleResetAnnouncementsFilter}
 				/>
 			</VStack>
 		</SafeAreaView>

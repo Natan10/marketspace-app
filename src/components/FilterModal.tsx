@@ -7,56 +7,49 @@ import { SelectButton } from "./SelectButton";
 import { Button as ButtonComposition } from './Button'
 
 type FormDataProps = {
-	isNew: string;
-	isExchangeable: boolean;
-	paymentMethods: string[];
+	isNew?: string;
+	isExchangeable?: boolean;
+	paymentMethods?: string[];
 }
 
 interface Props {
 	isVisible: boolean;
 	setIsVisible: (data: boolean) => void;
 	onSendFilterParams: (data: {
-		isNew: boolean
-		isExchangeable: boolean
-		paymentMethods: string[]
+		isNew?: boolean;
+		isExchangeable?: boolean;
+		paymentMethods?: string[];
 	}) => Promise<void>;
+	onResetFilterParams: () => Promise<void>;
 }
 
-export function FilterModal({isVisible, setIsVisible, onSendFilterParams}: Props){
-	const {control, handleSubmit, setValue, watch, reset} = useForm<FormDataProps>({
-		defaultValues: {
-			isNew: 'new',
-			isExchangeable: false,
-			paymentMethods: []
-		}
-	});
+export function FilterModal({isVisible, setIsVisible, onSendFilterParams, onResetFilterParams}: Props){
+	const {control, handleSubmit, setValue, watch, reset} = useForm<FormDataProps>();
 	const theme = useTheme();
 
 	const isNewField = watch('isNew');
 
 	async function getFilterParams(data: FormDataProps){
 		await onSendFilterParams({
-			isNew: data.isNew === 'new' ? true: false,
-			isExchangeable: data.isExchangeable,
-			paymentMethods: data.paymentMethods
+			isNew: data.isNew !== undefined ? (data.isNew === 'new' ? true: false): undefined,
+			isExchangeable: data.isExchangeable !== undefined ? (data.isExchangeable ? true : false) : undefined,
+			paymentMethods: data.paymentMethods !== undefined ? data.paymentMethods : undefined
 		});
 	}
 
-	function resetFilterParams(){
-		reset({
-			paymentMethods: [],
-			isNew: 'new',
-			isExchangeable: false
-		})
+	async function resetFilterParams(){
+		await onResetFilterParams();
+		reset();
 	}
 
 	return(
 		<Modal
 			visible={isVisible}
 			animationType='slide'
-			transparent
+			transparent	
 		>
-			<VStack flex={1} bgColor={'gray.300:alpha.30'}>
+			<VStack flex={1} bgColor={'gray.300:alpha.30'}
+			>
 				<VStack px={6} pb={8} pt={3} roundedTop={24} mt={'auto'} h={'630'} w={'full'} bgColor={'gray.700'}>
 					<Center>
 						<Box w={'54'} h={1} bgColor={'gray.400:alpha.40'}></Box>
